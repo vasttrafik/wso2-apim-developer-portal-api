@@ -486,7 +486,7 @@
 					"200": {
 						"description": "OK Application returned.",
 						"schema": {
-							"$ref": "#/definitions/API"
+							"$ref": "#/definitions/Application"
 						},
 						"headers": {
 							"Content-Type": {
@@ -535,7 +535,7 @@
 						"description": "Document object that needs to be added",
 						"required": true,
 						"schema": {
-							"$ref": "#/definitions/Document"
+							"$ref": "#/definitions/Application"
 						}
 					},
 					{
@@ -552,7 +552,7 @@
 					"200": {
 						"description": "OK Application updated.",
 						"schema": {
-							"$ref": "#/definitions/API"
+							"$ref": "#/definitions/Application"
 						},
 						"headers": {
 							"Location": {
@@ -568,7 +568,7 @@
 								"type": "string"
 							},
 							"Last-Modified": {
-								"description": "Date and time the resource has been modifed the last time. Used by caches, or in conditional reuquests.",
+								"description": "Date and time the resource has been modifed the last time. Used by caches, or in conditional requests.",
 								"type": "string"
 							}
 						}
@@ -934,7 +934,7 @@
 					"200": {
 						"description": "OK Subscription returned",
 						"schema": {
-							"$ref": "#/definitions/API"
+							"$ref": "#/definitions/Subscription"
 						},
 						"headers": {
 							"Content-Type": {
@@ -983,7 +983,7 @@
 						"description": "Document object that needs to be added",
 						"required": true,
 						"schema": {
-							"$ref": "#/definitions/Document"
+							"$ref": "#/definitions/Subscription"
 						}
 					},
 					{
@@ -1000,7 +1000,7 @@
 					"200": {
 						"description": "OK Subscription updated.",
 						"schema": {
-							"$ref": "#/definitions/API"
+							"$ref": "#/definitions/Subscription"
 						},
 						"headers": {
 							"Location": {
@@ -1735,20 +1735,6 @@
 				},
 				"roles": {
 					"type": "string"
-				}
-			}
-		},
-		"TierPermission": {
-			"title": "tierPermission",
-			"properties": {
-				"enableAccess": {
-					"type": "string"
-				},
-				"roles": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					}
 				}
 			}
 		},
