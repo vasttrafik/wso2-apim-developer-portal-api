@@ -1617,6 +1617,9 @@
 				"description": {
 					"type": "string"
 				},
+				"status": {
+					"type": "string"
+				},
 				"throttlingTier": {
 					"type": "string"
 				},
