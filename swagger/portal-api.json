@@ -1608,7 +1608,7 @@
 				"applicationId"
 			],
 			"properties": {
-				"applicationId": {
+				"id": {
 					"type": "string"
 				},
 				"name": {
@@ -1646,10 +1646,10 @@
 		"Claim": {
 			"title": "User attribute values",
 			"required": [
-				"claimURI"
+				"uri"
 			],
 			"properties": {
-				"claimURI": {
+				"uri": {
 					"type": "string"
 				},
 				"value": {
@@ -1675,10 +1675,10 @@
 		"Document": {
 			"title": "Document",
 			"required": [
-				"documentId"
+				"id"
 			],
 			"properties": {
-				"documentId": {
+				"id": {
 					"type": "integer"
 				},
 				"name": {
@@ -1701,10 +1701,10 @@
 		"Subscription": {
 			"title": "Subscription",
 			"required": [
-				"subscriptionId"
+				"id"
 			],
 			"properties": {
-				"subscriptionId": {
+				"id": {
 					"type": "number"
 				},
 				"application": {
@@ -1741,14 +1741,14 @@
 		"User": {
 			"title": "User account object",
 			"required": [
-				"userName"
+				"name"
 			],
 			"properties": {
-				"userId": {
+				"id": {
 					"type": "number",
 					"format": "integer"
 				},
-				"userName": {
+				"name": {
 					"type": "string"
 				},
 				"credential": {
