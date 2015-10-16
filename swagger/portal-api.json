@@ -322,8 +322,8 @@
 					"in": "path",
 					"description": "Document Id",
 					"required": true,
-					"type": "number",
-					"format": "integer"
+					"type": "integer",
+					"format": "int32"
 				}
 			]
 		},
@@ -648,8 +648,8 @@
 						"name": "validityTime",
 						"description": "Validity time in seconds.",
 						"required": true,
-						"type": "number",
-						"format": "integer"
+						"type": "integer",
+						"format": "int32"
 					},
 					{
 						"$ref": "#/parameters/Content-Type"
@@ -1390,16 +1390,16 @@
 			"in": "path",
 			"description": "Application Id",
 			"required": true,
-			"type": "number",
-			"format": "integer"
+			"type": "integer",
+			"format": "int32"
 		},
 		"subscriptionId": {
 			"name": "subscriptionId",
 			"in": "path",
 			"description": "Subscription Id",
 			"required": true,
-			"type": "number",
-			"format": "integer"
+			"type": "integer",
+			"format": "int32"
 		},
 		"limit": {
 			"name": "limit",
@@ -1407,8 +1407,8 @@
 			"description": "Maximum size of API array to return.",
 			"default": 25,
 			"required": true,
-			"type": "number",
-			"format": "double"
+			"type": "integer",
+			"format": "int32"
 		},
 		"offset": {
 			"name": "offset",
@@ -1416,16 +1416,16 @@
 			"description": "Starting point of the item list.",
 			"default": 0,
 			"required": true,
-			"type": "number",
-			"format": "double"
+			"type": "integer",
+			"format": "int32"
 		},
 		"userId": {
 			"name": "userId",
 			"in": "path",
 			"description": "User Id",
 			"required": true,
-			"type": "number",
-			"format": "integer"
+			"type": "integer",
+			"format": "int32"
 		},
 		"Accept": {
 			"name": "Accept",
@@ -1480,8 +1480,8 @@
 					"type": "string"
 				},
 				"expiresIn": {
-					"type": "number",
-					"format": "integer"
+					"type": "integer",
+					"format": "int32"
 				}
 			}
 		},
@@ -1679,7 +1679,8 @@
 			],
 			"properties": {
 				"id": {
-					"type": "integer"
+					"type": "integer",
+					"format": "int32"
 				},
 				"name": {
 					"type": "string"
@@ -1705,7 +1706,8 @@
 			],
 			"properties": {
 				"id": {
-					"type": "number"
+					"type": "integer",
+					"format": "int32"
 				},
 				"application": {
 					"$ref": "#/definitions/Application"
@@ -1745,8 +1747,8 @@
 			],
 			"properties": {
 				"id": {
-					"type": "number",
-					"format": "integer"
+					"type": "integer",
+					"format": "int32"
 				},
 				"name": {
 					"type": "string"
