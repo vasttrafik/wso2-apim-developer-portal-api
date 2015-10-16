@@ -1545,7 +1545,7 @@
 				"isDefaultVersion": {
 					"type": "boolean"
 				},
-				"transport": {
+				"transports": {
 					"type": "array",
 					"items": {
 						"type": "string",
@@ -1793,7 +1793,7 @@
 					"type": "string",
 					"description": "Preferably an url with more details about the error."
 				},
-				"error": {
+				"items": {
 					"type": "array",
 					"description": "If there are more than one error list them out. Ex. list out validation errors by each field.",
 					"items": {
