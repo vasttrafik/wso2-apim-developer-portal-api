@@ -1626,9 +1626,6 @@
 				"callbackUrl": {
 					"type": "string"
 				},
-				"description": {
-					"type": "string"
-				},
 				"consumerKey": {
 					"type": "string"
 				},
