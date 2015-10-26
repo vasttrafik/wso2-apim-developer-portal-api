@@ -1558,13 +1558,6 @@
 				"tier": {
 					"type": "string"
 				},
-				"visibility": {
-					"type": "string",
-					"enum": [
-						"public",
-						"private"
-					]
-				},
 				"endpoint": {
 					"$ref": "#/definitions/Endpoint"
 				}
