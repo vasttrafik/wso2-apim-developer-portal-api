@@ -18,15 +18,6 @@ public class API {
 		HTTPS
 	}
 
-	public enum Visibility {
-
-		@JsonProperty("public")
-		PUBLIC,
-		@JsonProperty("private")
-		PRIVATE
-
-	}
-
 	private String name;
 	private String description;
 	private String imageUrl;
@@ -40,7 +31,6 @@ public class API {
 	private Boolean isDefaultVersion;
 	private List<Transport> transports;
 	private String tier;
-	private Visibility visibility;
 	private Endpoint endpoint;
 
 	public API() {
@@ -159,14 +149,6 @@ public class API {
 
 	public void setTier(String tier) {
 		this.tier = tier;
-	}
-
-	public Visibility getVisibility() {
-		return visibility;
-	}
-
-	public void setVisibility(Visibility visibility) {
-		this.visibility = visibility;
 	}
 
 	public Endpoint getEndpoint() {
