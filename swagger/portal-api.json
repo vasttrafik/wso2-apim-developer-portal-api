@@ -428,15 +428,11 @@
 				],
 				"responses": {
 					"201": {
-						"description": "Created. Successful response with the newly created object as entity in the body. Location header contains URL of newly created entity.",
+						"description": "Created. Successful response with the newly created object as entity in the body.",
 						"schema": {
 							"$ref": "#/definitions/Application"
 						},
 						"headers": {
-							"Location": {
-								"description": "Location to the newly created Application.",
-								"type": "string"
-							},
 							"Content-Type": {
 								"description": "The content type of the body.",
 								"type": "string"
@@ -555,10 +551,6 @@
 							"$ref": "#/definitions/Application"
 						},
 						"headers": {
-							"Location": {
-								"description": "The URL of the newly created resource.",
-								"type": "string"
-							},
 							"Content-Type": {
 								"description": "The content type of the body.",
 								"type": "string"
@@ -657,15 +649,11 @@
 				],
 				"responses": {
 					"201": {
-						"description": "Created. Successful response with the newly created token object as entity in the body. Location header contains URL of newly created entity.",
+						"description": "Created. Successful response with the newly created token object as entity in the body.",
 						"schema": {
 							"$ref": "#/definitions/Application"
 						},
 						"headers": {
-							"Location": {
-								"description": "Location to the newly created token.",
-								"type": "string"
-							},
 							"Content-Type": {
 								"description": "The content type of the body.",
 								"type": "string"
@@ -745,10 +733,6 @@
 							"$ref": "#/definitions/AuthenticatedUser"
 						},
 						"headers": {
-							"Location": {
-								"description": "Location to the newly created Authenticated User.",
-								"type": "string"
-							},
 							"Content-Type": {
 								"description": "The content type of the body.",
 								"type": "string"
@@ -756,15 +740,11 @@
 						}
 					},
 					"201": {
-						"description": "Authorized. Successful response with the newly authenticated user as entity in the body. Location header contains URL of newly created entity.",
+						"description": "Authorized. Successful response with the newly authenticated user as entity in the body.",
 						"schema": {
 							"$ref": "#/definitions/AuthenticatedUser"
 						},
 						"headers": {
-							"Location": {
-								"description": "Location to the newly created Authenticated User.",
-								"type": "string"
-							},
 							"Content-Type": {
 								"description": "The content type of the body.",
 								"type": "string"
@@ -882,15 +862,11 @@
 				],
 				"responses": {
 					"201": {
-						"description": "Created. Successful response with the newly created object as entity in the body. Location header contains URL of newly created entity.",
+						"description": "Created. Successful response with the newly created object as entity in the body.",
 						"schema": {
 							"$ref": "#/definitions/Subscription"
 						},
 						"headers": {
-							"Location": {
-								"description": "Location to the newly created Subscription.",
-								"type": "string"
-							},
 							"Content-Type": {
 								"description": "The content type of the body.",
 								"type": "string"
@@ -1003,10 +979,6 @@
 							"$ref": "#/definitions/Subscription"
 						},
 						"headers": {
-							"Location": {
-								"description": "The URL of the newly created resource.",
-								"type": "string"
-							},
 							"Content-Type": {
 								"description": "The content type of the body.",
 								"type": "string"
@@ -1188,15 +1160,11 @@
 				],
 				"responses": {
 					"201": {
-						"description": "Created. Successful response with the newly created object with the userId attribute set and credential attribute removed, as entity in the body. Location header contains URL of newly created entity.",
+						"description": "Created. Successful response with the newly created object with the userId attribute set and credential attribute removed, as entity in the body.",
 						"schema": {
 							"$ref": "#/definitions/User"
 						},
 						"headers": {
-							"Location": {
-								"description": "Location to the newly created Application.",
-								"type": "string"
-							},
 							"Content-Type": {
 								"description": "The content type of the body.",
 								"type": "string"
@@ -1331,10 +1299,6 @@
 							"$ref": "#/definitions/User"
 						},
 						"headers": {
-							"Location": {
-								"description": "The URL of the newly created resource.",
-								"type": "string"
-							},
 							"Content-Type": {
 								"description": "The content type of the body.",
 								"type": "string"
