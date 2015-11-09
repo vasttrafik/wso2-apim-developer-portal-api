@@ -9,6 +9,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.Subscription;
@@ -35,6 +36,8 @@ public class Subscriptions {
 	// GET /subscriptions | Accept, If-None-Match | 200, 304, 401, 406
 	@GET
 	public Response getSubscriptions(
+			@QueryParam("limit") final Integer limit,
+			@QueryParam("offset") final Integer offset,
 			@HeaderParam("Accept") final String accept,
 			@HeaderParam("If-None-Match") final String ifNoneMatch
 	) {
