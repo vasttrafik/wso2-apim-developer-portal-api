@@ -340,7 +340,7 @@
 					{
 						"name": "query",
 						"in": "query",
-						"description": "** Search condition **.\n\nIf no advanced attribute modifier is found search will match the given query string against application Name.\n\nYou can search in attributes by using **\"attribute:\"** modifier.\n\nEg. \"status:ACTIVE\" will match if the application status is ACTIVE.\n\nSupported attribute modifiers are [ **name, tier, status, description** ]\n",
+						"description": "** Search condition **.\n\nIf no advanced attribute modifier is found search will match the given query string against application Name.\n\nYou can search in attributes by using **\"attribute:\"**modifier.\n\nEg. \"status:ACTIVE\" will match if the application status is active. Matching is case-insensitive. \n\nSupported attribute modifiers are [ **name, tier, status, description** ]\n",
 						"type": "string"
 					},
 					{
