@@ -1,14 +1,26 @@
 package org.vasttrafik.wso2.carbon.apimgt.portal.api.beans;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 /**
  *
  * @author Daniel Oskarsson <daniel.oskarsson@gmail.com>
  */
 public class Document {
 
+	public enum Type {
+
+		@JsonProperty("file")
+		FILE,
+		@JsonProperty("inline")
+		INLINE,
+		@JsonProperty("url")
+		URL
+	}
+
 	private Integer id;
 	private String name;
-	private String type;
+	private Type type;
 	private String summary;
 	private String content;
 	private String url;
@@ -36,11 +48,11 @@ public class Document {
 		this.name = name;
 	}
 
-	public String getType() {
+	public Type getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(Type type) {
 		this.type = type;
 	}
 

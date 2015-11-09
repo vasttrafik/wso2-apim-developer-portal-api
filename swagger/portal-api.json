@@ -1642,7 +1642,15 @@
 					"type": "string"
 				},
 				"type": {
-					"type": "string"
+					"type": "array",
+					"items": {
+						"type": "string",
+						"enum": [
+							"file",
+							"inline",
+							"url"
+						]
+					}
 				},
 				"summary": {
 					"type": "string"
