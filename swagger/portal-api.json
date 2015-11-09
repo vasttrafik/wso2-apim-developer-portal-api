@@ -37,7 +37,7 @@
 					{
 						"name": "query",
 						"in": "query",
-						"description": "** Search condition **.\n\nIf no advanced attribute modifier is found search will match the given query string against API Name.\n\nYou can search in attributes by using **\"attribute:\"** modifier.\n\nEg. \"provider:wso2\" will match if the API provider is wso2.\n\nSupported attribute modifiers are [ **version, context, status, description, subcontext, doc** ]\n",
+						"description": "** Search condition **.\n\nIf no advanced attribute modifier is found search will match the given query string against API Name.\n\nYou can search in attributes by using **\"attribute:\"**modifier.\n\nEg. \"provider:WSO2\" will match if the API provider is wso2. Matching is case-insensitive.\n\nSupported attribute modifiers are [ **name, version, context, status, description, document, provider** ]\n\nDocument is matched against all properties of all documents for all APIs.\n",
 						"type": "string"
 					},
 					{
