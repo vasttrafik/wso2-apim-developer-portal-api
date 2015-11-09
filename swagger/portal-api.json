@@ -179,7 +179,7 @@
 					{
 						"name": "query",
 						"in": "query",
-						"description": "Search condition.",
+						"description": "** Search condition **.\n\nIf no advanced attribute modifier is found search will match the given query string against document Name.\n\nYou can search in attributes by using **\"attribute:\"**modifier.\n\nEg. \"type:FILE\" will match if the document type is file. Matching is case-insensitive. \n\nSupported attribute modifiers are [ **name, type, summary** ]\n",
 						"type": "string"
 					},
 					{
