@@ -13,8 +13,9 @@ public class AuthenticatedUser {
 	public AuthenticatedUser() {
 	}
 
-	public AuthenticatedUser(String userId, AccessToken accessToken) {
+	public AuthenticatedUser(String userId, String userName, AccessToken accessToken) {
 		this.userId = userId;
+		this.userName = userName;
 		this.accessToken = accessToken;
 	}
 
