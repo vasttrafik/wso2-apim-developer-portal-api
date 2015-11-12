@@ -1,6 +1,6 @@
 package org.vasttrafik.wso2.carbon.apimgt.portal.api.beans;
 
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  *
