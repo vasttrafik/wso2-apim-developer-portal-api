@@ -1,1 +1,4 @@
+.idea/
+java/developer-portal-api.iml
 .DS_Store
+java/target/
