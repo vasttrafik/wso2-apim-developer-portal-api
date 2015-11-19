@@ -1,46 +1,36 @@
 package org.vasttrafik.wso2.carbon.apimgt.portal.api.beans;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.concurrent.TimeUnit;
+
 /**
- *
  * @author Daniel Oskarsson <daniel.oskarsson@gmail.com>
  */
 public class AccessToken {
 
-	private String token;
-	private String refreshToken;
-	private Integer expiresIn;
+    private String token;
+    private String refreshToken;
+    @JsonIgnore
+    private Long created;
+    @JsonIgnore
+    private Long validityTime;
 
-	public AccessToken() {
-	}
+    public AccessToken(String token, String refreshToken, String validityTime) {
+        this.token = token;
+        this.refreshToken = refreshToken;
+        this.created = System.currentTimeMillis();
+        this.validityTime = TimeUnit.SECONDS.toMillis(Long.valueOf(validityTime));
+    }
 
-	public AccessToken(String token, String refreshToken, Integer expiresIn) {
-		this.token = token;
-		this.refreshToken = refreshToken;
-		this.expiresIn = expiresIn;
-	}
+    public String getToken() {
+        return token;
+    }
 
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
-
-	public String getRefreshToken() {
-		return refreshToken;
-	}
-
-	public void setRefreshToken(String refreshToken) {
-		this.refreshToken = refreshToken;
-	}
-
-	public Integer getExpiresIn() {
-		return expiresIn;
-	}
-
-	public void setExpiresIn(Integer expiresIn) {
-		this.expiresIn = expiresIn;
-	}
-
+    @JsonProperty("expiresIn")
+    public long calculateExpiresIn() {
+        final Long now = System.currentTimeMillis();
+        return TimeUnit.MILLISECONDS.toSeconds(created + validityTime - now);
+    }
 }

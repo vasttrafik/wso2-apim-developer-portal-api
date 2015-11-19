@@ -1,62 +1,37 @@
 package org.vasttrafik.wso2.carbon.apimgt.portal.api.beans;
 
+import org.vasttrafik.wso2.carbon.apimgt.store.api.beans.SubscriptionsItemDTO;
+
 /**
- *
  * @author Daniel Oskarsson <daniel.oskarsson@gmail.com>
  */
 public class Subscription {
 
-	private Integer id;
-	private Application application;
-	private API api;
-	private String tier;
-	private String status;
+    private Integer id;
+    private Application application;
+    private API api;
+    private String tier;
+    private String status;
 
-	public Subscription() {
-	}
+    public Subscription() {}
 
-	public Subscription(Integer id) {
-		this.id = id;
-	}
+    public Subscription(final Integer id, final SubscriptionsItemDTO subscriptionsItemDTO, final Application application, final API api) {
+        this.id = id;
+        tier = subscriptionsItemDTO.tier;
+        status = subscriptionsItemDTO.status;
+        this.api = api;
+        this.application = application;
+    }
 
-	public Integer getId() {
-		return id;
-	}
+    public API getApi() {
+        return api;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public Application getApplication() {
+        return application;
+    }
 
-	public Application getApplication() {
-		return application;
-	}
-
-	public void setApplication(Application application) {
-		this.application = application;
-	}
-
-	public API getApi() {
-		return api;
-	}
-
-	public void setApi(API api) {
-		this.api = api;
-	}
-
-	public String getTier() {
-		return tier;
-	}
-
-	public void setTier(String tier) {
-		this.tier = tier;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
+    public Integer getId() {
+        return id;
+    }
 }

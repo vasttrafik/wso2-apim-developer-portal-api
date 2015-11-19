@@ -2,10 +2,15 @@ package org.vasttrafik.wso2.carbon.apimgt.portal.api;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.AccessToken;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.AuthenticatedUser;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.Credentials;
+import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.OauthData;
+import org.vasttrafik.wso2.carbon.apimgt.store.api.clients.ProxyClient;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.clients.TokenClient;
+import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 import org.vasttrafik.wso2.carbon.identity.api.utils.UserAdminUtils;
 
 import javax.ws.rs.*;
@@ -18,19 +23,43 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author Daniel Oskarsson <daniel.oskarsson@gmail.com>
  */
-@Path("security")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@Path("security")
 public class Security {
 
-    /**
-     * This map contains user names mapped to access token instances.
-     * The map may contain expired access tokens since the user may not log out.
-     * There can never be more entries in the map than registered users
-     */
-    public static final Map<String, AccessToken> ACCESS_TOKENS = new ConcurrentHashMap<>();
+    private static final String TOKEN_VALIDITY_TIME = "1800";
 
-    public static final String DEFAULT_APPLICATION = "DefaultApplication";
+    private static final Log LOGGER = LogFactory.getLog(Security.class);
+
+    private class Session {
+        private AccessToken accessToken;
+        private OauthData oauthData;
+        private ProxyClient proxyClient;
+    }
+
+    private static final Map<String, Session> SESSIONS = new ConcurrentHashMap<>();
+
+    /**
+     * Validate authorization header value
+     * If the given Authorization header value represents a user with a active session this method returns the username
+     * @param authorization The authorization header value. E.g. "Bearer d5e18e881d64802728e4193eeac18a38"
+     * @return The username of the authorized user.
+     */
+    public static String validateToken(final String authorization) throws Exception {
+        LOGGER.info("SESSIONS: " + SESSIONS.keySet().toString());
+
+        final String username = UserAdminUtils.validateToken(authorization);
+        if (SESSIONS.containsKey(username)) {
+            return username;
+        }
+
+        throw new NotAuthorizedException("User does not have valid session keys");
+    }
+
+    public static ProxyClient getClient(final String username) {
+        return SESSIONS.get(username).proxyClient;
+    }
 
     @POST
     public Response postSecurity(
@@ -39,13 +68,15 @@ public class Security {
             @QueryParam("refreshToken") final String refreshToken,
             @HeaderParam("Authorization") final String authorization
     ) {
+        ResponseUtils.checkParameter(null, "action", true, new String[]{"login", "logout", "refreshToken"}, action);
+
         switch (StringUtils.defaultString(action)) {
             case "login":
                 return login(authorization, credentials);
             case "logout":
                 return logout(authorization);
             case "refreshToken":
-                return refreshToken(refreshToken);
+                return login(authorization, credentials); // Refresh Token is currently not supported.
         }
         throw new BadRequestException("action missing or invalid");
     }
@@ -69,10 +100,13 @@ public class Security {
                     throw new BadRequestException("credentials does not match authorization header");
                 }
 
-                final int userId = UserAdminUtils.getUserId(userName);
-                return Response.status(Status.CREATED)
-                        .entity(new AuthenticatedUser("" + userId, userName, ACCESS_TOKENS.get(userName)))
-                        .build();
+                final Session session = SESSIONS.get(userName);
+                if (session != null) {
+                    final int userId = UserAdminUtils.getUserId(userName);
+                    return Response.status(Status.CREATED)
+                            .entity(new AuthenticatedUser("" + userId, userName, session.accessToken))
+                            .build();
+                }
             } catch (final Exception exception) {
             }
 
@@ -83,18 +117,26 @@ public class Security {
             UserAdminUtils.authenticateCredentials(userName, credential);
 
             /**
-             * Get an existing generated token to use
+             * Create a proxy client instance
              */
-            final TokenClient tokenClient = new TokenClient();
-            tokenClient.initialize(DEFAULT_APPLICATION);
-            final String token = tokenClient.getToken();
-            final int expires = tokenClient.getExpires();
+            final ProxyClient proxyClient = new ProxyClient(userName, credential);
 
             /**
-             * Create a AccessToken instance and store in the ACCESS_TOKENS map
+             * Get refresh a new token using the default application key and secret
              */
-            final AccessToken accessToken = new AccessToken(token, null, null); // TODO: refreshToken & expiresIn
-            ACCESS_TOKENS.put(userName, accessToken);
+            OauthData oauthData = proxyClient.getDefaultApplicationOauthData();
+            oauthData.validityTime = TOKEN_VALIDITY_TIME;
+            oauthData = proxyClient.refreshDefaultApplicationOauthData(oauthData);
+            final AccessToken accessToken = new AccessToken(oauthData.token, null, oauthData.validityTime);
+
+            /**
+             * Store proxy, oauthData and accessToken in SESSIONS
+             */
+            final Session session = new Session();
+            session.proxyClient = proxyClient;
+            session.oauthData = oauthData;
+            session.accessToken = accessToken;
+            SESSIONS.put(userName, session);
 
             /**
              * Return with an AuthenticatedUser instance
@@ -113,15 +155,13 @@ public class Security {
     private Response logout(final String authorization) {
         try {
             final String userName = UserAdminUtils.validateToken(authorization);
-            ACCESS_TOKENS.remove(userName);
+            final OauthData oauthData = SESSIONS.get(userName).oauthData;
+            SESSIONS.remove(userName);
+            new TokenClient().revoke(oauthData.token, oauthData.key, oauthData.secret);
             return Response.noContent().build();
         } catch (final Exception exception) {
             throw new NotAuthorizedException(ExceptionUtils.getStackTrace(exception));
         }
-    }
-
-    private Response refreshToken(final String refreshToken) {
-        throw new ServerErrorException(Status.NOT_IMPLEMENTED);
     }
 
 }

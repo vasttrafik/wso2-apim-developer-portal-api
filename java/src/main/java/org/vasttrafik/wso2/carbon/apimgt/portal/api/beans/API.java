@@ -1,162 +1,115 @@
 package org.vasttrafik.wso2.carbon.apimgt.portal.api.beans;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.vasttrafik.wso2.carbon.apimgt.portal.api.query.Query;
+import org.vasttrafik.wso2.carbon.apimgt.store.api.beans.APIDTO;
+
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.ServerErrorException;
+import javax.ws.rs.core.Response;
 import java.util.Date;
 import java.util.List;
 
 /**
- *
  * @author Daniel Oskarsson <daniel.oskarsson@gmail.com>
  */
 public class API {
 
-	public enum Transport {
+    public enum Transport {
+        http, https
+    }
 
-		@JsonProperty("http")
-		HTTP,
-		@JsonProperty("https")
-		HTTPS
-	}
+    public API(final APIDTO dto) {
+        name = dto.name;
+        version = dto.version;
+        provider = dto.provider;
+        context = dto.context;
+        status = dto.status;
+        description = dto.description;
+        imageUrl = dto.thumbnailurl;
+    }
 
-	private String name;
-	private String description;
-	private String imageUrl;
-	private String context;
-	private String version;
-	private String provider;
-	private String swagger;
-	private String status;
-	private String responseCaching;
-	private Date lastModifiedDate;
-	private Boolean isDefaultVersion;
-	private List<Transport> transports;
-	private String tier;
-	private Endpoint endpoint;
+    public static String getId(final String name, final String version, final String provider) {
+        return String.format("%s--%s_%s", name, version, provider);
+    }
 
-	public API() {
-	}
+    @JsonProperty("id")
+    public String getId() {
+        return getId(name, version, provider);
+    }
 
-	public API(String name, String context, String version) {
-		this.name = name;
-		this.context = context;
-		this.version = version;
-	}
+    private String name;
+    private String description;
+    private String imageUrl;
+    private String context;
+    private String version;
+    private String provider;
+    private String swagger;
+    private String status;
+    private String responseCaching;
+    private Date lastModifiedDate;
+    private Boolean isDefaultVersion;
+    private List<Transport> transports;
+    private String tier;
+    private Endpoint endpoint;
 
-	// Computed property
-	public String getId() {
-		return String.format("%s-%s-%s", name, version, this.provider != null ? this.provider : "null");
-	}
+    public API() {}
 
-	public String getName() {
-		return name;
-	}
+    public API(final String id) {
+        String[] strings = id.split("--", 2);
+        name = strings[0];
+        strings = strings[1].split("_", 2);
+        version = strings[0];
+        provider = strings[1];
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public API(final String name, final String version, final String provider) {
+        this.name = name;
+        this.version = version;
+        this.provider = provider;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getVersion() {
+        return version;
+    }
 
-	public String getImageUrl() {
-		return imageUrl;
-	}
+    public String getProvider() {
+        return provider;
+    }
 
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
+    public boolean matches(String query) {
+        if (query == null) {
+            return true;
+        } else {
+            return matches(new Query(query, "name"));
+        }
+    }
 
-	public String getContext() {
-		return context;
-	}
-
-	public void setContext(String context) {
-		this.context = context;
-	}
-
-	public String getVersion() {
-		return version;
-	}
-
-	public void setVersion(String version) {
-		this.version = version;
-	}
-
-	public String getProvider() {
-		return provider;
-	}
-
-	public void setProvider(String provider) {
-		this.provider = provider;
-	}
-
-	public String getSwagger() {
-		return swagger;
-	}
-
-	public void setSwagger(String swagger) {
-		this.swagger = swagger;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public String getResponseCaching() {
-		return responseCaching;
-	}
-
-	public void setResponseCaching(String responseCaching) {
-		this.responseCaching = responseCaching;
-	}
-
-	public Date getLastModifiedDate() {
-		return lastModifiedDate;
-	}
-
-	public void setLastModifiedDate(Date lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-	}
-
-	public Boolean getIsDefaultVersion() {
-		return isDefaultVersion;
-	}
-
-	public void setIsDefaultVersion(Boolean isDefaultVersion) {
-		this.isDefaultVersion = isDefaultVersion;
-	}
-
-	public List<Transport> getTransports() {
-		return transports;
-	}
-
-	public void setTransports(List<Transport> transport) {
-		this.transports = transport;
-	}
-
-	public String getTier() {
-		return tier;
-	}
-
-	public void setTier(String tier) {
-		this.tier = tier;
-	}
-
-	public Endpoint getEndpoint() {
-		return endpoint;
-	}
-
-	public void setEndpoint(Endpoint endpoint) {
-		this.endpoint = endpoint;
-	}
+    private boolean matches(Query query) {
+        switch (query.getAttribute()) {
+            case "id":
+                return query.getTrimmedValue().equalsIgnoreCase(getId());
+            case "name":
+                return query.getTrimmedValue().equalsIgnoreCase(name);
+            case "version":
+                return query.getTrimmedValue().equalsIgnoreCase(version);
+            case "context":
+                return query.getTrimmedValue().equalsIgnoreCase(context);
+            case "status":
+                return query.getTrimmedValue().equalsIgnoreCase(status);
+            case "description":
+                return query.getTrimmedValue().equalsIgnoreCase(description);
+            case "provider":
+                return query.getTrimmedValue().equalsIgnoreCase(provider);
+            case "document":
+                throw new ServerErrorException(Response.Status.NOT_IMPLEMENTED); /// TODO: implement document
+            default:
+                throw new BadRequestException("Unknown attribute: " + query.getAttribute());
+        }
+    }
 
 }

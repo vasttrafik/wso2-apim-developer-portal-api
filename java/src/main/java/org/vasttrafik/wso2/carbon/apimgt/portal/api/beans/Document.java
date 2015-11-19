@@ -1,83 +1,62 @@
 package org.vasttrafik.wso2.carbon.apimgt.portal.api.beans;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.vasttrafik.wso2.carbon.apimgt.portal.api.query.Query;
+import org.vasttrafik.wso2.carbon.apimgt.store.api.beans.DocumentDTO;
+
+import javax.ws.rs.BadRequestException;
 
 /**
- *
  * @author Daniel Oskarsson <daniel.oskarsson@gmail.com>
  */
 public class Document {
 
-	public enum Type {
+    public enum Type {
+        file, inline, url
+    }
 
-		@JsonProperty("file")
-		FILE,
-		@JsonProperty("inline")
-		INLINE,
-		@JsonProperty("url")
-		URL
-	}
+    public Integer id;
+    public String name;
+    public Type type;
+    public String summary;
+    public String content;
+    public String url;
 
-	private Integer id;
-	private String name;
-	private Type type;
-	private String summary;
-	private String content;
-	private String url;
+    public Document(final DocumentDTO dto) {
 
-	public Document() {
-	}
+        id = dto.name.hashCode(); // TODO: Documents have ID in the Swagger documentation;
+        name = dto.name;
+        type = Type.valueOf(dto.sourceType.name().toLowerCase());
+        summary = dto.summary;
+        content = null;
+        url = dto.sourceUrl;
 
-	public Document(Integer id) {
-		this.id = id;
-	}
+    }
 
-	public Integer getId() {
-		return id;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public boolean matches(String query) {
+        if (query == null) {
+            return true;
+        } else {
+            return matches(new Query(query, "name"));
+        }
+    }
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Type getType() {
-		return type;
-	}
-
-	public void setType(Type type) {
-		this.type = type;
-	}
-
-	public String getSummary() {
-		return summary;
-	}
-
-	public void setSummary(String summary) {
-		this.summary = summary;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    private boolean matches(Query query) {
+        switch (query.getAttribute()) {
+            case "id":
+                return query.getTrimmedValue().equalsIgnoreCase(String.valueOf(id));
+            case "name":
+                return query.getTrimmedValue().equalsIgnoreCase(name);
+            case "type":
+                return query.getTrimmedValue().equalsIgnoreCase(type.name());
+            case "summary":
+                return query.getTrimmedValue().equalsIgnoreCase(summary);
+            default:
+                throw new BadRequestException("Unknown attribute: " + query.getAttribute());
+        }
+    }
 
 }
