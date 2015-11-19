@@ -1,4 +1,4 @@
-package org.vasttrafik.wso2.carbon.apimgt.portal.api.clients;
+package org.vasttrafik.wso2.carbon.apimgt.token.api.clients;
 
 import org.vasttrafik.wso2.carbon.identity.api.utils.ClientUtils;
 

@@ -9,7 +9,7 @@ import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.AuthenticatedUser;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.Credentials;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.OauthData;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.clients.ProxyClient;
-import org.vasttrafik.wso2.carbon.apimgt.portal.api.clients.TokenClient;
+import org.vasttrafik.wso2.carbon.apimgt.token.api.clients.TokenClient;
 import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 import org.vasttrafik.wso2.carbon.identity.api.utils.UserAdminUtils;
 
