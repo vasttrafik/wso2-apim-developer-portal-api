@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.vasttrafik.wso2.carbon.apimgt.portal.api;
+package org.vasttrafik.wso2.carbon.apimgt.portal.api.resources;
 
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.API;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.Document;

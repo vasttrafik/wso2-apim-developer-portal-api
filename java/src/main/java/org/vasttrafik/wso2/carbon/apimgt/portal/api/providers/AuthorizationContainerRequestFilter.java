@@ -7,7 +7,7 @@ package org.vasttrafik.wso2.carbon.apimgt.portal.api.providers;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.annotations.Authorization;
-import org.vasttrafik.wso2.carbon.apimgt.portal.api.Security;
+import org.vasttrafik.wso2.carbon.apimgt.portal.api.resources.Security;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;

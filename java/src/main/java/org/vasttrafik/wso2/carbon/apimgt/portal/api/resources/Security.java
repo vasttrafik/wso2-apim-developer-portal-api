@@ -1,4 +1,4 @@
-package org.vasttrafik.wso2.carbon.apimgt.portal.api;
+package org.vasttrafik.wso2.carbon.apimgt.portal.api.resources;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
