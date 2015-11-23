@@ -1273,20 +1273,6 @@
 				}
 			}
 		},
-		"Claim": {
-			"title": "User attribute values",
-			"required": [
-				"uri"
-			],
-			"properties": {
-				"uri": {
-					"type": "string"
-				},
-				"value": {
-					"type": "string"
-				}
-			}
-		},
 		"Credentials": {
 			"title": "User credentials",
 			"required": [
