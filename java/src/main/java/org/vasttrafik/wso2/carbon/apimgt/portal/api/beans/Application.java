@@ -24,20 +24,20 @@ public class Application {
     private String accessToken;
     private List<Subscription> subscriptions;
 
-    public Application() {}
-
-    public Application(final ApplicationDTO applicationDTO, final SubscriptionDTO subscriptionDTO) {
-        this.id = applicationDTO.id;
-        this.name = applicationDTO.name;
-        this.throttlingTier = applicationDTO.tier;
-        this.callbackUrl = applicationDTO.callbackUrl;
-        this.status = applicationDTO.status;
-        this.description = applicationDTO.description;
+    public static Application valueOf(final ApplicationDTO applicationDTO, final SubscriptionDTO subscriptionDTO) {
+        final Application application = new Application();
+        application.id = applicationDTO.id;
+        application.name = applicationDTO.name;
+        application.throttlingTier = applicationDTO.tier;
+        application.callbackUrl = applicationDTO.callbackUrl;
+        application.status = applicationDTO.status;
+        application.description = applicationDTO.description;
         if (subscriptionDTO != null) {
-            this.consumerKey = subscriptionDTO.prodConsumerKey;
-            this.consumerSecret = subscriptionDTO.prodConsumerSecret;
-            this.accessToken = subscriptionDTO.prodKey;
+            application.consumerKey = subscriptionDTO.prodConsumerKey;
+            application.consumerSecret = subscriptionDTO.prodConsumerSecret;
+            application.accessToken = subscriptionDTO.prodKey;
         }
+        return application;
     }
 
     public Application setAccessToken(final String accessToken) {
@@ -77,10 +77,6 @@ public class Application {
 
     public String getThrottlingTier() {
         return throttlingTier;
-    }
-
-    public Integer getId() {
-        return id;
     }
 
     public String getDescription() {

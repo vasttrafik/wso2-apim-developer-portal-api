@@ -30,21 +30,20 @@ public final class ProxyClient implements ResourceBundleAware {
         final List<SubscriptionDTO> subscriptionDTOs = storeClient.getSubscriptions().subscriptions;
         for (SubscriptionDTO subscriptionDTO : subscriptionDTOs) {
             if (Constants.DEFAULT_APPLICATION.equals(subscriptionDTO.name)) {
-                final OauthData oauthData = new OauthData();
-                oauthData.token = subscriptionDTO.prodKey;
-                oauthData.key = subscriptionDTO.prodConsumerKey;
-                oauthData.secret = subscriptionDTO.prodConsumerSecret;
-                oauthData.validityTime = String.valueOf(subscriptionDTO.prodValidityTime);
-                return oauthData;
+                return OauthData.valueOf(subscriptionDTO);
             }
         }
         throw new InternalServerErrorException(ResponseUtils.serverError(resourceBundle, 2001L, new Object[][]{{Constants.DEFAULT_APPLICATION}}));
     }
 
     public OauthData refreshDefaultApplicationOauthData(OauthData oauthData) {
-        final RefreshTokenDTO.Key key = storeClient.refreshToken(oauthData.token, oauthData.key, oauthData.secret, oauthData.validityTime).data.key;
-        oauthData.token = key.accessToken;
-        return oauthData;
+        final RefreshTokenDTO.Key key = storeClient.refreshToken(
+                oauthData.getToken(),
+                oauthData.getKey(),
+                oauthData.getSecret(),
+                oauthData.getValidityTime()
+        ).data.key;
+        return oauthData.setToken(key.accessToken);
     }
 
 
@@ -76,7 +75,7 @@ public final class ProxyClient implements ResourceBundleAware {
 
         final List<API> list = new ArrayList<>();
         for (final APIDTO apiDTO : apiDTOs) {
-            final API api = new API(apiDTO);
+            final API api = API.valueOf(apiDTO);
             if (api.matches(query)) {
                 list.add(api);
             }
@@ -100,7 +99,7 @@ public final class ProxyClient implements ResourceBundleAware {
 
         final List<Document> list = new ArrayList<>();
         for (final DocumentDTO documentDTO : documentDTOs) {
-            final Document document = new Document(documentDTO);
+            final Document document = Document.valueOf(documentDTO);
             if (document.matches(query)) {
                 list.add(document);
             }
@@ -127,7 +126,7 @@ public final class ProxyClient implements ResourceBundleAware {
         for (final ApplicationDTO applicationDTO : applicationDTOs) {
             for (final SubscriptionDTO subscriptionDTO : subscriptionDTOs) {
                 if (subscriptionDTO.id.equals(applicationDTO.id)) {
-                    final Application application = new Application(applicationDTO, subscriptionDTO);
+                    final Application application = Application.valueOf(applicationDTO, subscriptionDTO);
                     if (!application.getName().equals(Constants.DEFAULT_APPLICATION) && application.matches(query)) {
                         list.add(application);
                     }
@@ -194,8 +193,7 @@ public final class ProxyClient implements ResourceBundleAware {
                 for (final SubscriptionsItemDTO subscriptionsItemDTO : subscriptionDTO.subscriptions) {
                     final Application application = getApplication(subscriptionDTO.id);
                     final API api = getAPI(API.getId(subscriptionsItemDTO.name, subscriptionsItemDTO.version, subscriptionsItemDTO.provider));
-                    final Subscription subscription = new Subscription(subscriptionDTO.id, subscriptionsItemDTO, application, api);
-                    list.add(subscription);
+                    list.add(Subscription.valueOf(subscriptionDTO.id, subscriptionsItemDTO, application, api));
                 }
             }
         }

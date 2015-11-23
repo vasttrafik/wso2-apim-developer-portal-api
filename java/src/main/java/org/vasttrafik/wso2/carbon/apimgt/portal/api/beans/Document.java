@@ -15,22 +15,22 @@ public class Document {
         file, inline, url
     }
 
-    public Integer id;
-    public String name;
-    public Type type;
-    public String summary;
-    public String content;
-    public String url;
+    private Integer id;
+    private String name;
+    private Type type;
+    private String summary;
+    private String content;
+    private String url;
 
-    public Document(final DocumentDTO dto) {
-
-        id = dto.name.hashCode(); // TODO: Documents have ID in the Swagger documentation;
-        name = dto.name;
-        type = Type.valueOf(dto.sourceType.name().toLowerCase());
-        summary = dto.summary;
-        content = null;
-        url = dto.sourceUrl;
-
+    public static Document valueOf(final DocumentDTO documentDTO) {
+        final Document document = new Document();
+        document.id = documentDTO.name.hashCode(); // TODO: Documents have ID in the Swagger documentation;
+        document.name = documentDTO.name;
+        document.type = Type.valueOf(documentDTO.sourceType.name().toLowerCase());
+        document.summary = documentDTO.summary;
+        document.content = null;
+        document.url = documentDTO.sourceUrl;
+        return document;
     }
 
     public boolean matchesAny(String query) {

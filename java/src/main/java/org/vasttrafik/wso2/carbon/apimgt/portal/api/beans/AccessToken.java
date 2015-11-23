@@ -17,15 +17,13 @@ public class AccessToken {
     @JsonIgnore
     private Long validityTime;
 
-    public AccessToken(String token, String refreshToken, String validityTime) {
-        this.token = token;
-        this.refreshToken = refreshToken;
-        this.created = System.currentTimeMillis();
-        this.validityTime = TimeUnit.SECONDS.toMillis(Long.valueOf(validityTime));
-    }
-
-    public String getToken() {
-        return token;
+    public static AccessToken valueOf(final String token, final String refreshToken, final String validityTime) {
+        final AccessToken accessToken = new AccessToken();
+        accessToken.token = token;
+        accessToken.refreshToken = refreshToken;
+        accessToken.created = System.currentTimeMillis();
+        accessToken.validityTime = TimeUnit.SECONDS.toMillis(Long.valueOf(validityTime));
+        return accessToken;
     }
 
     @JsonProperty("expiresIn")

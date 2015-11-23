@@ -4,38 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.query.Query;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.beans.APIDTO;
 
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * @author Daniel Oskarsson <daniel.oskarsson@gmail.com>
  */
 public class API {
-
-    public enum Transport {
-        http, https
-    }
-
-    public API(final APIDTO dto) {
-        name = dto.name;
-        version = dto.version;
-        provider = dto.provider;
-        context = dto.context;
-        status = dto.status;
-        description = dto.description;
-        imageUrl = dto.thumbnailurl;
-    }
-
-    public static String getId(final String name, final String version, final String provider) {
-        return String.format("%s--%s_%s", name, version, provider);
-    }
-
-    @JsonProperty("id")
-    public String getId() {
-        return getId(name, version, provider);
-    }
 
     private String name;
     private String description;
@@ -45,27 +20,26 @@ public class API {
     private String provider;
     private String swagger;
     private String status;
-    private String responseCaching;
-    private Date lastModifiedDate;
-    private Boolean isDefaultVersion;
-    private List<Transport> transports;
-    private String tier;
-    private Endpoint endpoint;
 
-    public API() {}
-
-    public API(final String id) {
-        String[] strings = id.split("--", 2);
-        name = strings[0];
-        strings = strings[1].split("_", 2);
-        version = strings[0];
-        provider = strings[1];
+    public static String getId(final String name, final String version, final String provider) {
+        return String.format("%s--%s_%s", name, version, provider);
     }
 
-    public API(final String name, final String version, final String provider) {
-        this.name = name;
-        this.version = version;
-        this.provider = provider;
+    public static API valueOf(final APIDTO apidto) {
+        final API api = new API();
+        api.name = apidto.name;
+        api.version = apidto.version;
+        api.provider = apidto.provider;
+        api.context = apidto.context;
+        api.status = apidto.status;
+        api.description = apidto.description;
+        api.imageUrl = apidto.thumbnailurl;
+        return api;
+    }
+
+    @JsonProperty("id")
+    public String getId() {
+        return getId(name, version, provider);
     }
 
     public String getName() {

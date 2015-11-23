@@ -9,10 +9,12 @@ public class AuthenticatedUser {
     private String userName;
     private AccessToken accessToken;
 
-    public AuthenticatedUser(String userId, String userName, AccessToken accessToken) {
-        this.userId = userId;
-        this.userName = userName;
-        this.accessToken = accessToken;
+    public static AuthenticatedUser valueOf(final Integer userId, final String userName, final AccessToken accessToken) {
+        final AuthenticatedUser authenticatedUser = new AuthenticatedUser();
+        authenticatedUser.userId = String.valueOf(userId);
+        authenticatedUser.userName = userName;
+        authenticatedUser.accessToken = accessToken;
+        return authenticatedUser;
     }
 
 }

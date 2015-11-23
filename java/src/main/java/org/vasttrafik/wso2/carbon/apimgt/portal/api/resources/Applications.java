@@ -104,6 +104,7 @@ public class Applications implements ResourceBundleAware {
             @HeaderParam("If-Match") final String ifMatch,
             @HeaderParam("If-Unmodified-Since") final String ifUnmodifiedSince
     ) {
+
         ResponseUtils.checkParameter(resourceBundle, "applicationId", true, new String[]{}, String.valueOf(applicationId));
 
         try {

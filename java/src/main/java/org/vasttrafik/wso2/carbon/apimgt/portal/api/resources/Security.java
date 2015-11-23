@@ -104,9 +104,9 @@ public class Security implements ResourceBundleAware {
                 final Session session = SESSIONS.get(userName);
                 if (session != null) {
                     final int userId = UserAdminUtils.getUserId(userName);
-                    return Response.status(Status.CREATED)
-                            .entity(new AuthenticatedUser("" + userId, userName, session.accessToken))
-                            .build();
+                    return Response.status(Status.CREATED).entity(
+                            AuthenticatedUser.valueOf(userId, userName, session.accessToken)
+                    ).build();
                 }
             } catch (final Exception exception) {
             }
@@ -126,9 +126,9 @@ public class Security implements ResourceBundleAware {
              * Get refresh a new token using the default application key and secret
              */
             OauthData oauthData = proxyClient.getDefaultApplicationOauthData();
-            oauthData.validityTime = TOKEN_VALIDITY_TIME;
+            oauthData.setValidityTime(TOKEN_VALIDITY_TIME);
             oauthData = proxyClient.refreshDefaultApplicationOauthData(oauthData);
-            final AccessToken accessToken = new AccessToken(oauthData.token, null, oauthData.validityTime);
+            final AccessToken accessToken = AccessToken.valueOf(oauthData.getToken(), null, oauthData.getValidityTime());
 
             /**
              * Store proxy, oauthData and accessToken in SESSIONS
@@ -144,7 +144,7 @@ public class Security implements ResourceBundleAware {
              */
             final int userId = UserAdminUtils.getUserId(credentials.getUserName());
             return Response.status(Status.CREATED).entity(
-                    new AuthenticatedUser("" + userId, userName, accessToken)
+                    AuthenticatedUser.valueOf(userId, userName, accessToken)
             ).build();
         } catch (final NotAuthorizedException exception) {
             throw exception;
@@ -158,7 +158,7 @@ public class Security implements ResourceBundleAware {
             final String userName = UserAdminUtils.validateToken(authorization);
             final OauthData oauthData = SESSIONS.get(userName).oauthData;
             SESSIONS.remove(userName);
-            new TokenClient().revoke(oauthData.token, oauthData.key, oauthData.secret);
+            new TokenClient().revoke(oauthData.getToken(), oauthData.getKey(), oauthData.getSecret());
             return Response.noContent().build();
         } catch (final Exception exception) {
             throw new NotAuthorizedException(ExceptionUtils.getStackTrace(exception));

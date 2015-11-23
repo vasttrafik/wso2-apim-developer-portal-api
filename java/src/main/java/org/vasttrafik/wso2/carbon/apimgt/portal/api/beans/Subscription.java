@@ -13,14 +13,14 @@ public class Subscription {
     private String tier;
     private String status;
 
-    public Subscription() {}
-
-    public Subscription(final Integer id, final SubscriptionsItemDTO subscriptionsItemDTO, final Application application, final API api) {
-        this.id = id;
-        tier = subscriptionsItemDTO.tier;
-        status = subscriptionsItemDTO.status;
-        this.api = api;
-        this.application = application;
+    public static Subscription valueOf(final Integer id, final SubscriptionsItemDTO subscriptionsItemDTO, final Application application, final API api) {
+        final Subscription subscription = new Subscription();
+        subscription.id = id;
+        subscription.tier = subscriptionsItemDTO.tier;
+        subscription.status = subscriptionsItemDTO.status;
+        subscription.api = api;
+        subscription.application = application;
+        return subscription;
     }
 
     public API getApi() {
