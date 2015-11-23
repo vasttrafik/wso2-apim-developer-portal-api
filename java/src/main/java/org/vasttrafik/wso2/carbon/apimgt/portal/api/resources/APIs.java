@@ -5,11 +5,13 @@ import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.Document;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.pagination.PaginatedList;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.clients.ProxyClient;
+import org.vasttrafik.wso2.carbon.common.api.utils.RegistryUtils;
 import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 import org.vasttrafik.wso2.carbon.identity.api.utils.ClientUtils;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,6 +82,52 @@ public class APIs implements ResourceBundleAware {
 
         try {
             return getProxyClient(authorization).getAPI(apiId);
+        } catch (final NotAuthorizedException | NotFoundException exception) {
+            throw exception;
+        } catch (final Exception exception) {
+            throw new InternalServerErrorException(ResponseUtils.serverError(exception));
+        }
+    }
+
+    @GET
+    @Path("{apiId}/image")
+    @Produces({"image/jpeg"})
+    public Response getImage(
+            @PathParam("apiId") final String apiId,
+            @HeaderParam("Authorization") final String authorization
+    ) {
+        ResponseUtils.checkParameter(resourceBundle, "apiId", true, new String[]{}, apiId);
+
+        try {
+            final API api = getProxyClient(authorization).getAPI(apiId);
+            final String pathFormat = "/_system/governance/apimgt/applicationdata/icons/%s/%s/%s/icon";
+            final String path = String.format(pathFormat, api.getProvider(), api.getName(), api.getVersion());
+
+            final Object content = RegistryUtils.getContent(path);
+            return Response.ok(content).build();
+        } catch (final NotAuthorizedException | NotFoundException exception) {
+            throw exception;
+        } catch (final Exception exception) {
+            throw new InternalServerErrorException(ResponseUtils.serverError(exception));
+        }
+    }
+
+    @GET
+    @Path("{apiId}/swagger")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getJson(
+            @PathParam("apiId") final String apiId,
+            @HeaderParam("Authorization") final String authorization
+    ) {
+        ResponseUtils.checkParameter(resourceBundle, "apiId", true, new String[]{}, apiId);
+
+        try {
+            final API api = getProxyClient(authorization).getAPI(apiId);
+            final String pathFormat = "/_system/governance/apimgt/applicationdata/api-docs/%s-%s-%s/api-doc.json";
+            final String path = String.format(pathFormat, api.getName(), api.getVersion(), api.getProvider());
+
+            final Object content = RegistryUtils.getContent(path);
+            return Response.ok(content).build();
         } catch (final NotAuthorizedException | NotFoundException exception) {
             throw exception;
         } catch (final Exception exception) {

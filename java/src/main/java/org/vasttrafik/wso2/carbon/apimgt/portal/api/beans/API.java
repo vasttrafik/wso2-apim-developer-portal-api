@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.query.Query;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.beans.APIDTO;
 
+import javax.ws.rs.core.UriBuilder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,11 +15,9 @@ public class API {
 
     private String name;
     private String description;
-    private String imageUrl;
     private String context;
     private String version;
     private String provider;
-    private String swagger;
     private String status;
 
     public static String getId(final String name, final String version, final String provider) {
@@ -33,13 +32,22 @@ public class API {
         api.context = apidto.context;
         api.status = apidto.status;
         api.description = apidto.description;
-        api.imageUrl = apidto.thumbnailurl;
         return api;
     }
 
     @JsonProperty("id")
     public String getId() {
         return getId(name, version, provider);
+    }
+
+    @JsonProperty("imageUrl")
+    public String getImageUrl() {
+        return UriBuilder.fromPath("apis/{apiId}/image").build(getId()).toString();
+    }
+
+    @JsonProperty("swagger")
+    public String getSwaggerUrl() {
+        return UriBuilder.fromPath("apis/{apiId}/swagger").build(getId()).toString();
     }
 
     public String getName() {
