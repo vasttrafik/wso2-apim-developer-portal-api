@@ -1072,39 +1072,6 @@
 				}
 			]
 		},
-		"/subscriptions/{subscriptionId}/block-subscription": {
-			"put": {
-				"parameters": [
-					{
-						"$ref": "#/parameters/subscriptionId"
-					}
-				],
-				"description": "Block a subscription.",
-				"responses": {
-					"200": {
-						"description": "OK Subscription was blocked successfully."
-					},
-					"400": {
-						"description": "Bad Request. Invalid request or validation error",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"401": {
-						"description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"404": {
-						"description": "Not Found. Requested Subscription does not exist.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					}
-				}
-			}
-		},
 		"/tiers": {
 			"get": {
 				"description": "Get Available Tiers",
