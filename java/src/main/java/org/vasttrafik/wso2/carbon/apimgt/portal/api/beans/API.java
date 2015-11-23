@@ -4,11 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.query.Query;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.beans.APIDTO;
 
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.ServerErrorException;
-import javax.ws.rs.core.Response;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Daniel Oskarsson <daniel.oskarsson@gmail.com>
@@ -82,34 +81,15 @@ public class API {
     }
 
     public boolean matches(String query) {
-        if (query == null) {
-            return true;
-        } else {
-            return matches(new Query(query, "name"));
-        }
-    }
-
-    private boolean matches(Query query) {
-        switch (query.getAttribute()) {
-            case "id":
-                return query.getTrimmedValue().equalsIgnoreCase(getId());
-            case "name":
-                return query.getTrimmedValue().equalsIgnoreCase(name);
-            case "version":
-                return query.getTrimmedValue().equalsIgnoreCase(version);
-            case "context":
-                return query.getTrimmedValue().equalsIgnoreCase(context);
-            case "status":
-                return query.getTrimmedValue().equalsIgnoreCase(status);
-            case "description":
-                return query.getTrimmedValue().equalsIgnoreCase(description);
-            case "provider":
-                return query.getTrimmedValue().equalsIgnoreCase(provider);
-            case "document":
-                throw new ServerErrorException(Response.Status.NOT_IMPLEMENTED); /// TODO: implement document
-            default:
-                throw new BadRequestException("Unknown attribute: " + query.getAttribute());
-        }
+        final Map<String, String> map = new HashMap<>();
+        map.put("id", getId());
+        map.put("name", name);
+        map.put("version", version);
+        map.put("context", context);
+        map.put("status", status);
+        map.put("provider", provider);
+        map.put("description", description);
+        return new Query(query, "name").matches(map);
     }
 
 }

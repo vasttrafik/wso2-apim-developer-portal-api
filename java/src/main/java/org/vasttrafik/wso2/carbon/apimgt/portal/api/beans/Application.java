@@ -4,8 +4,9 @@ import org.vasttrafik.wso2.carbon.apimgt.portal.api.query.Query;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.beans.ApplicationDTO;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.beans.SubscriptionDTO;
 
-import javax.ws.rs.BadRequestException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Daniel Oskarsson <daniel.oskarsson@gmail.com>
@@ -70,32 +71,6 @@ public class Application {
         return consumerSecret;
     }
 
-    public boolean matches(String query) {
-        if (query == null) {
-            return true;
-        } else {
-            return matches(new Query(query, "name"));
-        }
-    }
-
-    private boolean matches(Query query) {
-        switch (query.getAttribute()) {
-            case "id":
-                return query.getTrimmedValue().equalsIgnoreCase(String.valueOf(id));
-            case "name":
-                return query.getTrimmedValue().equalsIgnoreCase(name);
-            // TOOD: Requirements says to implement tier.
-            //case "tier":
-            //	return query.getTrimmedValue().equalsIgnoreCase(tier);
-            case "status":
-                return query.getTrimmedValue().equalsIgnoreCase(status);
-            case "description":
-                return query.getTrimmedValue().equalsIgnoreCase(description);
-            default:
-                throw new BadRequestException("Unknown attribute: " + query.getAttribute());
-        }
-    }
-
     public String getName() {
         return name;
     }
@@ -116,7 +91,13 @@ public class Application {
         return callbackUrl;
     }
 
-    String getStatus() {
-        return status;
+    public boolean matches(String query) {
+        final Map<String, String> map = new HashMap<>();
+        map.put("id", String.valueOf(id));
+        map.put("name", name);
+        map.put("status", status);
+        map.put("description", description);
+        return new Query(query, "name").matches(map);
     }
+
 }

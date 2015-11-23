@@ -3,7 +3,8 @@ package org.vasttrafik.wso2.carbon.apimgt.portal.api.beans;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.query.Query;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.beans.DocumentDTO;
 
-import javax.ws.rs.BadRequestException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Daniel Oskarsson <daniel.oskarsson@gmail.com>
@@ -37,26 +38,12 @@ public class Document {
     }
 
     public boolean matches(String query) {
-        if (query == null) {
-            return true;
-        } else {
-            return matches(new Query(query, "name"));
-        }
-    }
-
-    private boolean matches(Query query) {
-        switch (query.getAttribute()) {
-            case "id":
-                return query.getTrimmedValue().equalsIgnoreCase(String.valueOf(id));
-            case "name":
-                return query.getTrimmedValue().equalsIgnoreCase(name);
-            case "type":
-                return query.getTrimmedValue().equalsIgnoreCase(type.name());
-            case "summary":
-                return query.getTrimmedValue().equalsIgnoreCase(summary);
-            default:
-                throw new BadRequestException("Unknown attribute: " + query.getAttribute());
-        }
+        final Map<String, String> map = new HashMap<>();
+        map.put("id", String.valueOf(id));
+        map.put("name", name);
+        map.put("type", type.name());
+        map.put("summary", summary);
+        return new Query(query, "name").matches(map);
     }
 
 }
