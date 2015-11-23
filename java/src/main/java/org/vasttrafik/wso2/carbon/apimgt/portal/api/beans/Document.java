@@ -33,17 +33,26 @@ public class Document {
 
     }
 
-    public Integer getId() {
-        return id;
+    public boolean matchesAny(String query) {
+        for (final String value : getMap().values()) {
+            if (query.equalsIgnoreCase(value)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean matches(String query) {
+        return new Query(query, "name").matches(getMap());
+    }
+
+    private Map<String, String> getMap() {
         final Map<String, String> map = new HashMap<>();
         map.put("id", String.valueOf(id));
         map.put("name", name);
         map.put("type", type.name());
         map.put("summary", summary);
-        return new Query(query, "name").matches(map);
+        return map;
     }
 
 }

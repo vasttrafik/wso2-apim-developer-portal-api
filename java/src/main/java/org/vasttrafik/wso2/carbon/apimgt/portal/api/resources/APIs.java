@@ -1,6 +1,7 @@
 package org.vasttrafik.wso2.carbon.apimgt.portal.api.resources;
 
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.API;
+import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.Document;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.pagination.PaginatedList;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.clients.ProxyClient;
@@ -9,6 +10,7 @@ import org.vasttrafik.wso2.carbon.identity.api.utils.ClientUtils;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,7 +38,28 @@ public class APIs implements ResourceBundleAware {
             @HeaderParam("If-None-Match") final String ifNoneMatch
     ) {
         try {
-            final List<API> list = getProxyClient(authorization).getAPIs(query);
+            final String DOCUMENT = "document:";
+            final String documentQuery = query != null && query.startsWith(DOCUMENT) ? query.substring(DOCUMENT.length()).trim() : null;
+
+            final ProxyClient client = getProxyClient(authorization);
+            List<API> list = client.getAPIs(documentQuery != null ? null : query);
+
+            // "Document is matched against all properties of all documents for all APIs."
+            if (documentQuery != null) {
+                final List<API> filteredList = new ArrayList<>();
+                // Get all documents for the given api
+                for (final API api : list) {
+                    for (final Document document : client.getDocuments(api, null)) {
+                        // Match against all searchable properties in the given document
+                        if (document.matchesAny(documentQuery)) {
+                            filteredList.add(api);
+                            break;
+                        }
+                    }
+                }
+                list = filteredList;
+            }
+
             return new PaginatedList<>(this.getClass(), offset, limit, query, list);
         } catch (final NotAuthorizedException exception) {
             throw exception;
