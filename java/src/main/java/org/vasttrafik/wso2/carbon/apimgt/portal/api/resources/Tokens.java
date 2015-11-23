@@ -1,6 +1,7 @@
 package org.vasttrafik.wso2.carbon.apimgt.portal.api.resources;
 
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.annotations.Authorization;
+import org.vasttrafik.wso2.carbon.apimgt.portal.api.annotations.Status;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.Application;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.clients.ProxyClient;
@@ -22,6 +23,7 @@ public final class Tokens implements ResourceBundleAware {
     @Context
     private SecurityContext securityContext;
 
+    @Status(Status.CREATED)
     @POST
     public Application postApplicationTokens(
             @PathParam("applicationId") final Integer applicationId,

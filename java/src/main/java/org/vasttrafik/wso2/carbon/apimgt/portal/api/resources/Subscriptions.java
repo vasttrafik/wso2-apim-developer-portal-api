@@ -1,6 +1,7 @@
 package org.vasttrafik.wso2.carbon.apimgt.portal.api.resources;
 
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.annotations.Authorization;
+import org.vasttrafik.wso2.carbon.apimgt.portal.api.annotations.Status;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.Subscription;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.pagination.PaginatedList;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
@@ -59,6 +60,7 @@ public class Subscriptions implements ResourceBundleAware {
         }
     }
 
+    @Status(Status.CREATED)
     @POST
     public Subscription postSubscription(
             final Subscription subscription
@@ -79,6 +81,7 @@ public class Subscriptions implements ResourceBundleAware {
         }
     }
 
+    @Status(Status.OK)
     @DELETE
     @Path("{subscriptionId}")
     public void deleteSubscriptions(

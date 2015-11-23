@@ -1,6 +1,7 @@
 package org.vasttrafik.wso2.carbon.apimgt.portal.api.resources;
 
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.annotations.Authorization;
+import org.vasttrafik.wso2.carbon.apimgt.portal.api.annotations.Status;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.Application;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.pagination.PaginatedList;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
@@ -60,6 +61,7 @@ public class Applications implements ResourceBundleAware {
         }
     }
 
+    @Status(Status.CREATED)
     @POST
     public Application postApplications(
             final Application application
@@ -94,6 +96,7 @@ public class Applications implements ResourceBundleAware {
         }
     }
 
+    @Status(Status.OK)
     @DELETE
     @Path("{applicationId}")
     public void deleteApplication(
