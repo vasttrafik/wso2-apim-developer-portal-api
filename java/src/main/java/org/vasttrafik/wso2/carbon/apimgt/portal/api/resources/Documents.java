@@ -44,7 +44,7 @@ public class Documents implements ResourceBundleAware {
             final API api = client.getAPI(apiId);
             final List<Document> list = client.getDocuments(api, query);
             return new PaginatedList<>(this.getClass(), offset, limit, query, list, apiId);
-        } catch (NotFoundException exception) {
+        } catch (final BadRequestException | NotAuthorizedException | NotFoundException exception) {
             throw exception;
         } catch (Exception exception) {
             throw new InternalServerErrorException(ResponseUtils.serverError(exception));
@@ -67,7 +67,7 @@ public class Documents implements ResourceBundleAware {
             final ProxyClient client = APIs.getProxyClient(authorization);
             final API api = client.getAPI(apiId);
             return client.getDocument(api, documentId);
-        } catch (NotFoundException exception) {
+        } catch (final BadRequestException | NotAuthorizedException | NotFoundException exception) {
             throw exception;
         } catch (Exception exception) {
             throw new InternalServerErrorException(ResponseUtils.serverError(exception));

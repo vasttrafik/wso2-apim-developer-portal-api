@@ -35,7 +35,7 @@ public final class Tokens implements ResourceBundleAware {
         try {
             final ProxyClient client = Security.getClient(securityContext.getUserPrincipal().getName());
             return client.generateApplicationToken(applicationId, String.valueOf(validityTime));
-        } catch (final NotFoundException exception) {
+        } catch (final BadRequestException | NotAuthorizedException | NotFoundException exception) {
             throw exception;
         } catch (final Exception exception) {
             throw new InternalServerErrorException(ResponseUtils.serverError(exception));

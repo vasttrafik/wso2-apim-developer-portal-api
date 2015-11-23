@@ -36,6 +36,8 @@ public class Subscriptions implements ResourceBundleAware {
             final ProxyClient client = Security.getClient(securityContext.getUserPrincipal().getName());
             final List<Subscription> list = client.getSubscriptions();
             return new PaginatedList<>(this.getClass(), offset, limit, null, list);
+        } catch (final BadRequestException | NotAuthorizedException | NotFoundException exception) {
+            throw exception;
         } catch (final Exception exception) {
             throw new InternalServerErrorException(ResponseUtils.serverError(exception));
         }
@@ -53,7 +55,7 @@ public class Subscriptions implements ResourceBundleAware {
         try {
             final ProxyClient client = Security.getClient(securityContext.getUserPrincipal().getName());
             return client.getSubscription(subscriptionId);
-        } catch (final NotFoundException exception) {
+        } catch (final BadRequestException | NotAuthorizedException | NotFoundException exception) {
             throw exception;
         } catch (final Exception exception) {
             throw new InternalServerErrorException(ResponseUtils.serverError(exception));
@@ -74,7 +76,7 @@ public class Subscriptions implements ResourceBundleAware {
         try {
             final ProxyClient client = Security.getClient(securityContext.getUserPrincipal().getName());
             return client.addSubscription(subscription);
-        } catch (final BadRequestException exception) {
+        } catch (final BadRequestException | NotAuthorizedException | NotFoundException exception) {
             throw exception;
         } catch (final Exception exception) {
             throw new InternalServerErrorException(ResponseUtils.serverError(exception));
@@ -95,7 +97,7 @@ public class Subscriptions implements ResourceBundleAware {
             final ProxyClient client = Security.getClient(securityContext.getUserPrincipal().getName());
             final Subscription subscription = client.getSubscription(subscriptionId);
             client.removeSubscription(subscription);
-        } catch (final BadRequestException | NotFoundException exception) {
+        } catch (final BadRequestException | NotAuthorizedException | NotFoundException exception) {
             throw exception;
         } catch (final Exception exception) {
             throw new InternalServerErrorException(ResponseUtils.serverError(exception));

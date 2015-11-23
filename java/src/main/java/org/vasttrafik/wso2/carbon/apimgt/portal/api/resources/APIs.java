@@ -63,7 +63,7 @@ public class APIs implements ResourceBundleAware {
             }
 
             return new PaginatedList<>(this.getClass(), offset, limit, query, list);
-        } catch (final NotAuthorizedException exception) {
+        } catch (final BadRequestException | NotAuthorizedException | NotFoundException exception) {
             throw exception;
         } catch (final Exception exception) {
             throw new InternalServerErrorException(ResponseUtils.serverError(exception));
@@ -82,7 +82,7 @@ public class APIs implements ResourceBundleAware {
 
         try {
             return getProxyClient(authorization).getAPI(apiId);
-        } catch (final NotAuthorizedException | NotFoundException exception) {
+        } catch (final BadRequestException | NotAuthorizedException | NotFoundException exception) {
             throw exception;
         } catch (final Exception exception) {
             throw new InternalServerErrorException(ResponseUtils.serverError(exception));
@@ -105,7 +105,7 @@ public class APIs implements ResourceBundleAware {
 
             final Object content = RegistryUtils.getContent(path);
             return Response.ok(content).build();
-        } catch (final NotAuthorizedException | NotFoundException exception) {
+        } catch (final BadRequestException | NotAuthorizedException | NotFoundException exception) {
             throw exception;
         } catch (final Exception exception) {
             throw new InternalServerErrorException(ResponseUtils.serverError(exception));
@@ -128,7 +128,7 @@ public class APIs implements ResourceBundleAware {
 
             final Object content = RegistryUtils.getContent(path);
             return Response.ok(content).build();
-        } catch (final NotAuthorizedException | NotFoundException exception) {
+        } catch (final BadRequestException | NotAuthorizedException | NotFoundException exception) {
             throw exception;
         } catch (final Exception exception) {
             throw new InternalServerErrorException(ResponseUtils.serverError(exception));

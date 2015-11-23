@@ -37,6 +37,8 @@ public class Applications implements ResourceBundleAware {
             final ProxyClient client = Security.getClient(securityContext.getUserPrincipal().getName());
             final List<Application> list = client.getApplications(query);
             return new PaginatedList<>(this.getClass(), offset, limit, query, list);
+        } catch (final BadRequestException | NotAuthorizedException | NotFoundException exception) {
+            throw exception;
         } catch (final Exception exception) {
             throw new InternalServerErrorException(ResponseUtils.serverError(exception));
         }
@@ -54,7 +56,7 @@ public class Applications implements ResourceBundleAware {
         try {
             final ProxyClient client = Security.getClient(securityContext.getUserPrincipal().getName());
             return client.getApplication(applicationId);
-        } catch (final NotFoundException exception) {
+        } catch (final BadRequestException | NotAuthorizedException | NotFoundException exception) {
             throw exception;
         } catch (final Exception exception) {
             throw new InternalServerErrorException(ResponseUtils.serverError(exception));
@@ -71,7 +73,7 @@ public class Applications implements ResourceBundleAware {
         try {
             final ProxyClient client = Security.getClient(securityContext.getUserPrincipal().getName());
             return client.addApplication(application);
-        } catch (final BadRequestException | NotFoundException exception) {
+        } catch (final BadRequestException | NotAuthorizedException | NotFoundException exception) {
             throw exception;
         } catch (final Exception exception) {
             throw new InternalServerErrorException(ResponseUtils.serverError(exception));
@@ -89,7 +91,7 @@ public class Applications implements ResourceBundleAware {
         try {
             final ProxyClient client = Security.getClient(securityContext.getUserPrincipal().getName());
             return client.updateApplication(applicationId, application);
-        } catch (final BadRequestException | NotFoundException exception) {
+        } catch (final BadRequestException | NotAuthorizedException | NotFoundException exception) {
             throw exception;
         } catch (final Exception exception) {
             throw new InternalServerErrorException(ResponseUtils.serverError(exception));
@@ -110,7 +112,7 @@ public class Applications implements ResourceBundleAware {
         try {
             final ProxyClient client = Security.getClient(securityContext.getUserPrincipal().getName());
             client.removeApplication(applicationId);
-        } catch (final NotFoundException exception) {
+        } catch (final BadRequestException | NotAuthorizedException | NotFoundException exception) {
             throw exception;
         } catch (final Exception exception) {
             throw new InternalServerErrorException(ResponseUtils.serverError(exception));
