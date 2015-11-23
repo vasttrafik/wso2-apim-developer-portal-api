@@ -1229,64 +1229,6 @@
 				},
 				"status": {
 					"type": "string"
-				},
-				"responseCaching": {
-					"type": "string"
-				},
-				"lastModifiedDate": {
-					"type": "string",
-					"format": "date-time"
-				},
-				"isDefaultVersion": {
-					"type": "boolean"
-				},
-				"transports": {
-					"type": "array",
-					"items": {
-						"type": "string",
-						"enum": [
-							"http",
-							"https"
-						]
-					}
-				},
-				"tier": {
-					"type": "string"
-				},
-				"endpoint": {
-					"$ref": "#/definitions/Endpoint"
-				}
-			}
-		},
-		"Endpoint": {
-			"title": "Endpoint",
-			"required": [
-				"type",
-				"production",
-				"sandbox"
-			],
-			"properties": {
-				"type": {
-					"type": "string",
-					"enum": [
-						"http",
-						"address",
-						"wsdl",
-						"failover",
-						"load_balanced"
-					]
-				},
-				"production": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					}
-				},
-				"sandbox": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					}
 				}
 			}
 		},
