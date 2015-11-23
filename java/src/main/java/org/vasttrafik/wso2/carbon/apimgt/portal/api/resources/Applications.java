@@ -65,9 +65,6 @@ public class Applications implements ResourceBundleAware {
             final Application application
     ) {
         ResponseUtils.checkParameter(resourceBundle, "applicationName", true, new String[]{}, application.getName());
-        ResponseUtils.checkParameter(null, "applicationTier", true, new String[]{}, application.getThrottlingTier());
-        ResponseUtils.checkParameter(null, "applicationDescription", true, new String[]{}, application.getDescription());
-        ResponseUtils.checkParameter(null, "applicationCallbackUrl", true, new String[]{}, application.getCallbackUrl());
 
         try {
             final ProxyClient client = Security.getClient(securityContext.getUserPrincipal().getName());
@@ -87,12 +84,6 @@ public class Applications implements ResourceBundleAware {
             @HeaderParam("If-Match") final String ifMatch,
             @HeaderParam("If-Unmodified-Since") final String ifUnmodifiedSince
     ) {
-        ResponseUtils.checkParameter(null, "applicationId", true, new String[]{}, String.valueOf(application));
-        ResponseUtils.checkParameter(null, "applicationName", true, new String[]{}, application.getName());
-        ResponseUtils.checkParameter(null, "applicationTier", true, new String[]{}, application.getThrottlingTier());
-        ResponseUtils.checkParameter(null, "applicationDescription", true, new String[]{}, application.getDescription());
-        ResponseUtils.checkParameter(null, "applicationCallbackUrl", true, new String[]{}, application.getCallbackUrl());
-
         try {
             final ProxyClient client = Security.getClient(securityContext.getUserPrincipal().getName());
             return client.updateApplication(applicationId, application);

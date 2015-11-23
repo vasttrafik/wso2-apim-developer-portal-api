@@ -1,5 +1,6 @@
 package org.vasttrafik.wso2.carbon.apimgt.store.api.clients;
 
+import org.apache.commons.lang3.StringUtils;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.*;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.beans.*;
@@ -157,12 +158,18 @@ public final class ProxyClient implements ResourceBundleAware {
     }
 
     public Application updateApplication(final Integer applicationId, final Application application) {
-        final String name = getApplication(applicationId).getName();
-        if (name.equals(Constants.DEFAULT_APPLICATION) || application.getName().equals(Constants.DEFAULT_APPLICATION)) {
+        final Application existingApplication = getApplication(applicationId);
+        if (Constants.DEFAULT_APPLICATION.equals(existingApplication.getName()) || Constants.DEFAULT_APPLICATION.equals(application.getName())) {
             throw new BadRequestException(ResponseUtils.badRequest(resourceBundle, 2001L, new Object[][]{{Constants.DEFAULT_APPLICATION}}));
         }
 
-        storeClient.updateApplication(name, application.getName(), application.getCallbackUrl(), application.getDescription(), application.getThrottlingTier());
+        storeClient.updateApplication(
+                existingApplication.getName(),
+                StringUtils.defaultString(application.getName(), existingApplication.getName()),
+                StringUtils.defaultString(application.getCallbackUrl(), existingApplication.getCallbackUrl()),
+                StringUtils.defaultString(application.getDescription(), existingApplication.getDescription()),
+                StringUtils.defaultString(application.getThrottlingTier(), existingApplication.getThrottlingTier())
+        );
         return getApplication(applicationId);
     }
 
