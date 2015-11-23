@@ -3,6 +3,7 @@ package org.vasttrafik.wso2.carbon.apimgt.portal.api.resources;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.annotations.Authorization;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.Application;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.pagination.PaginatedList;
+import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.clients.ProxyClient;
 import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 
@@ -19,7 +20,7 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("applications")
-public class Applications {
+public class Applications implements ResourceBundleAware {
 
     @Context
     private SecurityContext securityContext;
@@ -36,7 +37,7 @@ public class Applications {
             final List<Application> list = client.getApplications(query);
             return new PaginatedList<>(this.getClass(), offset, limit, query, list);
         } catch (final Exception exception) {
-            throw new InternalServerErrorException(exception);
+            throw new InternalServerErrorException(ResponseUtils.serverError(exception));
         }
     }
 
@@ -47,7 +48,7 @@ public class Applications {
             @HeaderParam("If-None-Match") final String ifNoneMatch,
             @HeaderParam("If-Modified-Since") final String ifModifiedSince
     ) {
-        ResponseUtils.checkParameter(null, "applicationId", true, new String[]{}, String.valueOf(applicationId));
+        ResponseUtils.checkParameter(resourceBundle, "applicationId", true, new String[]{}, String.valueOf(applicationId));
 
         try {
             final ProxyClient client = Security.getClient(securityContext.getUserPrincipal().getName());
@@ -55,7 +56,7 @@ public class Applications {
         } catch (final NotFoundException exception) {
             throw exception;
         } catch (final Exception exception) {
-            throw new InternalServerErrorException(exception);
+            throw new InternalServerErrorException(ResponseUtils.serverError(exception));
         }
     }
 
@@ -63,7 +64,7 @@ public class Applications {
     public Application postApplications(
             final Application application
     ) {
-        ResponseUtils.checkParameter(null, "applicationName", true, new String[]{}, application.getName());
+        ResponseUtils.checkParameter(resourceBundle, "applicationName", true, new String[]{}, application.getName());
         ResponseUtils.checkParameter(null, "applicationTier", true, new String[]{}, application.getThrottlingTier());
         ResponseUtils.checkParameter(null, "applicationDescription", true, new String[]{}, application.getDescription());
         ResponseUtils.checkParameter(null, "applicationCallbackUrl", true, new String[]{}, application.getCallbackUrl());
@@ -74,7 +75,7 @@ public class Applications {
         } catch (final BadRequestException | NotFoundException exception) {
             throw exception;
         } catch (final Exception exception) {
-            throw new InternalServerErrorException(exception);
+            throw new InternalServerErrorException(ResponseUtils.serverError(exception));
         }
     }
 
@@ -98,7 +99,7 @@ public class Applications {
         } catch (final BadRequestException | NotFoundException exception) {
             throw exception;
         } catch (final Exception exception) {
-            throw new InternalServerErrorException(exception);
+            throw new InternalServerErrorException(ResponseUtils.serverError(exception));
         }
     }
 
@@ -109,7 +110,7 @@ public class Applications {
             @HeaderParam("If-Match") final String ifMatch,
             @HeaderParam("If-Unmodified-Since") final String ifUnmodifiedSince
     ) {
-        ResponseUtils.checkParameter(null, "applicationId", true, new String[]{}, String.valueOf(applicationId));
+        ResponseUtils.checkParameter(resourceBundle, "applicationId", true, new String[]{}, String.valueOf(applicationId));
 
         try {
             final ProxyClient client = Security.getClient(securityContext.getUserPrincipal().getName());
@@ -117,7 +118,7 @@ public class Applications {
         } catch (final NotFoundException exception) {
             throw exception;
         } catch (final Exception exception) {
-            throw new InternalServerErrorException(exception);
+            throw new InternalServerErrorException(ResponseUtils.serverError(exception));
         }
     }
 

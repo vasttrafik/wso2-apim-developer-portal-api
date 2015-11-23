@@ -8,6 +8,7 @@ package org.vasttrafik.wso2.carbon.apimgt.portal.api.resources;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.API;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.Document;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.pagination.PaginatedList;
+import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.clients.ProxyClient;
 import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 
@@ -22,7 +23,7 @@ import java.util.List;
  */
 @Produces(MediaType.APPLICATION_JSON)
 @Path("apis/{apiId}/documents")
-public class Documents {
+public class Documents implements ResourceBundleAware {
 
     @Context
     private SecurityContext securityContext;
@@ -36,7 +37,7 @@ public class Documents {
             @HeaderParam("Authorization") final String authorization,
             @HeaderParam("If-None-Match") final String ifNoneMatch
     ) {
-        ResponseUtils.checkParameter(null, "apiId", true, new String[]{}, apiId);
+        ResponseUtils.checkParameter(resourceBundle, "apiId", true, new String[]{}, apiId);
 
         try {
             final ProxyClient client = APIs.getProxyClient(authorization);
@@ -46,7 +47,7 @@ public class Documents {
         } catch (NotFoundException exception) {
             throw exception;
         } catch (Exception exception) {
-            throw new InternalServerErrorException(exception);
+            throw new InternalServerErrorException(ResponseUtils.serverError(exception));
         }
     }
 
@@ -59,8 +60,8 @@ public class Documents {
             @HeaderParam("If-None-Match") final String ifNoneMatch,
             @HeaderParam("If-Modified-Since") final String ifModifiedSince
     ) {
-        ResponseUtils.checkParameter(null, "apiId", true, new String[]{}, apiId);
-        ResponseUtils.checkParameter(null, "documentId", true, new String[]{}, documentId);
+        ResponseUtils.checkParameter(resourceBundle, "apiId", true, new String[]{}, apiId);
+        ResponseUtils.checkParameter(resourceBundle, "documentId", true, new String[]{}, documentId);
 
         try {
             final ProxyClient client = APIs.getProxyClient(authorization);
@@ -69,7 +70,7 @@ public class Documents {
         } catch (NotFoundException exception) {
             throw exception;
         } catch (Exception exception) {
-            throw new InternalServerErrorException(exception);
+            throw new InternalServerErrorException(ResponseUtils.serverError(exception));
         }
     }
 }

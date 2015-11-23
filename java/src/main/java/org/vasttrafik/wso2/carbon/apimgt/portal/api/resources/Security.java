@@ -8,6 +8,7 @@ import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.AccessToken;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.AuthenticatedUser;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.Credentials;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.OauthData;
+import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.clients.ProxyClient;
 import org.vasttrafik.wso2.carbon.apimgt.token.api.clients.TokenClient;
 import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
@@ -26,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Path("security")
-public class Security {
+public class Security implements ResourceBundleAware {
 
     private static final String TOKEN_VALIDITY_TIME = "1800";
 
@@ -53,8 +54,7 @@ public class Security {
         if (SESSIONS.containsKey(username)) {
             return username;
         }
-
-        throw new NotAuthorizedException("User does not have valid session keys");
+        throw new NotAuthorizedException(null);
     }
 
     public static ProxyClient getClient(final String username) {
@@ -68,7 +68,7 @@ public class Security {
             @QueryParam("refreshToken") final String refreshToken,
             @HeaderParam("Authorization") final String authorization
     ) {
-        ResponseUtils.checkParameter(null, "action", true, new String[]{"login", "logout", "refreshToken"}, action);
+        ResponseUtils.checkParameter(resourceBundle, "action", true, new String[]{"login", "logout", "refreshToken"}, action);
 
         switch (StringUtils.defaultString(action)) {
             case "login":
@@ -78,13 +78,14 @@ public class Security {
             case "refreshToken":
                 return login(authorization, credentials); // Refresh Token is currently not supported.
         }
-        throw new BadRequestException("action missing or invalid");
+
+        throw new InternalServerErrorException();
     }
 
     private Response login(final String authorization, final Credentials credentials) {
         try {
             if (credentials == null || credentials.getUserName() == null || credentials.getCredential() == null) {
-                throw new BadRequestException("credentials not provided");
+                throw new BadRequestException(ResponseUtils.badRequest(resourceBundle, 2004L, new Object[][]{}));
             }
             final String userName = credentials.getUserName();
             final String credential = credentials.getCredential();
@@ -97,7 +98,7 @@ public class Security {
                 final String existingUserName = UserAdminUtils.validateToken(authorization);
 
                 if (!userName.equals(existingUserName)) {
-                    throw new BadRequestException("credentials does not match authorization header");
+                    throw new BadRequestException(ResponseUtils.badRequest(resourceBundle, 2005L, new Object[][]{}));
                 }
 
                 final Session session = SESSIONS.get(userName);

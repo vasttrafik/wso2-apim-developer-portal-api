@@ -1,7 +1,9 @@
 package org.vasttrafik.wso2.carbon.apimgt.store.api.clients;
 
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.*;
+import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.beans.*;
+import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.InternalServerErrorException;
@@ -12,7 +14,7 @@ import java.util.List;
 /**
  * @author Daniel Oskarsson <daniel.oskarsson@gmail.com>
  */
-public final class ProxyClient {
+public final class ProxyClient implements ResourceBundleAware {
 
     private StoreClient storeClient;
 
@@ -35,7 +37,7 @@ public final class ProxyClient {
                 return oauthData;
             }
         }
-        throw new InternalServerErrorException();
+        throw new InternalServerErrorException(ResponseUtils.serverError(resourceBundle, 2001L, new Object[][]{{Constants.DEFAULT_APPLICATION}}));
     }
 
     public OauthData refreshDefaultApplicationOauthData(OauthData oauthData) {
@@ -50,7 +52,7 @@ public final class ProxyClient {
     public Application generateApplicationToken(final Integer applicationId, final String validityTime) {
         final Application application = getApplication(applicationId);
         if (application.getName().equals(Constants.DEFAULT_APPLICATION)) {
-            throw new BadRequestException();
+            throw new BadRequestException(ResponseUtils.badRequest(resourceBundle, 2001L, new Object[][]{{Constants.DEFAULT_APPLICATION}}));
         }
 
         if (application.hasAccessToken()) {
@@ -85,7 +87,7 @@ public final class ProxyClient {
         try {
             return getAPIs("id:" + apiId).get(0);
         } catch (final Exception exception) {
-            throw new NotFoundException();
+            throw new NotFoundException(ResponseUtils.notFound(resourceBundle, 2001L, new Object[][]{{apiId}}));
         }
     }
 
@@ -109,7 +111,7 @@ public final class ProxyClient {
         try {
             return getDocuments(api, "id:" + documentId).get(0);
         } catch (final Exception exception) {
-            throw new NotFoundException();
+            throw new NotFoundException(ResponseUtils.notFound(resourceBundle, 2001L, new Object[][]{{documentId}}));
         }
     }
 
@@ -138,18 +140,18 @@ public final class ProxyClient {
         try {
             return getApplications("id:" + applicationId).get(0);
         } catch (final Exception exception) {
-            throw new NotFoundException();
+            throw new NotFoundException(ResponseUtils.notFound(resourceBundle, 2001L, new Object[][]{{applicationId}}));
         }
     }
 
     public Application addApplication(final Application application) {
         if (application.getName().equals(Constants.DEFAULT_APPLICATION)) {
-            throw new BadRequestException();
+            throw new BadRequestException(ResponseUtils.badRequest(resourceBundle, 2001L, new Object[][]{{Constants.DEFAULT_APPLICATION}}));
         }
 
         final StatusDTO statusDTO = storeClient.addApplication(application.getName(), application.getThrottlingTier(), application.getDescription(), application.getCallbackUrl());
         if (!"APPROVED".equals(statusDTO.status)) {
-            throw new InternalServerErrorException("status != APPROVED");
+            throw new InternalServerErrorException(ResponseUtils.serverError(resourceBundle, 2007L, new Object[][]{}));
         }
         return getApplications(application.getName()).get(0);
     }
@@ -157,7 +159,7 @@ public final class ProxyClient {
     public Application updateApplication(final Integer applicationId, final Application application) {
         final String name = getApplication(applicationId).getName();
         if (name.equals(Constants.DEFAULT_APPLICATION) || application.getName().equals(Constants.DEFAULT_APPLICATION)) {
-            throw new BadRequestException();
+            throw new BadRequestException(ResponseUtils.badRequest(resourceBundle, 2001L, new Object[][]{{Constants.DEFAULT_APPLICATION}}));
         }
 
         storeClient.updateApplication(name, application.getName(), application.getCallbackUrl(), application.getDescription(), application.getThrottlingTier());
@@ -167,7 +169,7 @@ public final class ProxyClient {
     public void removeApplication(final Integer applicationId) {
         final String name = getApplication(applicationId).getName();
         if (name.equals(Constants.DEFAULT_APPLICATION)) {
-            throw new BadRequestException();
+            throw new BadRequestException(ResponseUtils.badRequest(resourceBundle, 2001L, new Object[][]{{Constants.DEFAULT_APPLICATION}}));
         }
 
         storeClient.removeApplication(name);
@@ -200,7 +202,7 @@ public final class ProxyClient {
                 return subscription;
             }
         }
-        throw new NotFoundException();
+        throw new NotFoundException(ResponseUtils.notFound(resourceBundle, 2001L, new Object[][]{{String.valueOf(id)}}));
     }
 
     public Subscription addSubscription(final Subscription subscription) {

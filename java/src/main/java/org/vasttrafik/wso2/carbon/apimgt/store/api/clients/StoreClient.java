@@ -2,7 +2,9 @@ package org.vasttrafik.wso2.carbon.apimgt.store.api.clients;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.beans.*;
+import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 import org.vasttrafik.wso2.carbon.identity.api.utils.ClientUtils;
 
 import javax.ws.rs.InternalServerErrorException;
@@ -24,7 +26,7 @@ import javax.ws.rs.core.Response;
  *
  * @author Daniel Oskarsson <daniel.oskarsson@gmail.com>
  */
-final class StoreClient {
+final class StoreClient implements ResourceBundleAware {
 
     private static final WebTarget TARGET;
 
@@ -46,19 +48,14 @@ final class StoreClient {
                 .request().post(null);
         final WrapperDTO wrapperDTO = response.readEntity(WrapperDTO.class);
         if (BooleanUtils.isNotFalse(wrapperDTO.error)) {
-            throw new NotAuthorizedException(wrapperDTO.message);
+            throw new NotAuthorizedException(ResponseUtils.notAuthorizedError(resourceBundle, 2002L, new Object[][]{{wrapperDTO.message}}));
         }
         return response.getCookies().get("JSESSIONID");
     }
 
-    private <T extends  WrapperDTO> T validateDTO(final T wrapperDTO) {
+    private <T extends WrapperDTO> T validateDTO(final T wrapperDTO) {
         if (BooleanUtils.isNotFalse(wrapperDTO.error)) {
-            throw new InternalServerErrorException() {
-                @Override
-                public String getMessage() {
-                    return wrapperDTO.message;
-                }
-            };
+            throw new InternalServerErrorException(ResponseUtils.serverError(resourceBundle, 2002L, new Object[][]{{wrapperDTO.message}}));
         }
         return wrapperDTO;
     }

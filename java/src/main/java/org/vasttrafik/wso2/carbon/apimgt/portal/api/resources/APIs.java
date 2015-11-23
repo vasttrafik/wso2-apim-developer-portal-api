@@ -2,6 +2,7 @@ package org.vasttrafik.wso2.carbon.apimgt.portal.api.resources;
 
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.API;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.pagination.PaginatedList;
+import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.clients.ProxyClient;
 import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 import org.vasttrafik.wso2.carbon.identity.api.utils.ClientUtils;
@@ -15,7 +16,7 @@ import java.util.List;
  */
 @Produces(MediaType.APPLICATION_JSON)
 @Path("apis")
-public class APIs {
+public class APIs implements ResourceBundleAware {
 
     static ProxyClient getProxyClient(final String authorization) throws Exception {
         if (authorization == null) {
@@ -40,7 +41,7 @@ public class APIs {
         } catch (final NotAuthorizedException exception) {
             throw exception;
         } catch (final Exception exception) {
-            throw new InternalServerErrorException(exception);
+            throw new InternalServerErrorException(ResponseUtils.serverError(exception));
         }
     }
 
@@ -52,14 +53,14 @@ public class APIs {
             @HeaderParam("If-None-Match") final String ifNoneMatch,
             @HeaderParam("If-Modified-Since") final String ifModifiedSince
     ) {
-        ResponseUtils.checkParameter(null, "apiId", true, new String[]{}, apiId);
+        ResponseUtils.checkParameter(resourceBundle, "apiId", true, new String[]{}, apiId);
 
         try {
             return getProxyClient(authorization).getAPI(apiId);
         } catch (final NotAuthorizedException | NotFoundException exception) {
             throw exception;
         } catch (final Exception exception) {
-            throw new InternalServerErrorException(exception);
+            throw new InternalServerErrorException(ResponseUtils.serverError(exception));
         }
     }
 
