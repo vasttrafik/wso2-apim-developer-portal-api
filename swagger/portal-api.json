@@ -1389,7 +1389,7 @@
 			"title": "Authenticated user object",
 			"required": [
 				"userId",
-				"token"
+				"accessToken"
 			],
 			"properties": {
 				"userId": {
@@ -1398,7 +1398,7 @@
 				"userName": {
 					"type": "string"
 				},
-				"token": {
+				"accessToken": {
 					"$ref": "#/definitions/AccessToken"
 				}
 			}
