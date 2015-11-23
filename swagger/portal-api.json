@@ -1072,55 +1072,6 @@
 				}
 			]
 		},
-		"/tiers": {
-			"get": {
-				"description": "Get Available Tiers",
-				"parameters": [
-					{
-						"$ref": "#/parameters/Accept"
-					},
-					{
-						"$ref": "#/parameters/If-None-Match"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK List of tiers returned.",
-						"schema": {
-							"type": "array",
-							"items": {
-								"$ref": "#/definitions/Tier"
-							}
-						},
-						"headers": {
-							"Content-Type": {
-								"description": "The content type of the body.",
-								"type": "string"
-							},
-							"ETag": {
-								"description": "Entity Tag of the response resource. Used by caches, or in conditional requests.",
-								"type": "string"
-							}
-						}
-					},
-					"304": {
-						"description": "Not Modified. Empty body because the client has already the latest version of the requested resource."
-					},
-					"401": {
-						"description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"406": {
-						"description": "Not Acceptable. The requested media type is not supported",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					}
-				}
-			}
-		},
 		"/users": {
 			"post": {
 				"description": "Creates a new user account.",
