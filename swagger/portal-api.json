@@ -1358,7 +1358,7 @@
 		"apiId": {
 			"name": "apiId",
 			"in": "path",
-			"description": "**API ID** consisting name version and provider of the API. \nShould be formated as **name/version/provider**\n",
+			"description": "**API ID** consisting name version and provider of the API. \nShould be formated as **name--version_provider**\n",
 			"required": true,
 			"type": "string"
 		},
