@@ -4,8 +4,8 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.beans.*;
+import org.vasttrafik.wso2.carbon.common.api.utils.ClientUtils;
 import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
-import org.vasttrafik.wso2.carbon.identity.api.utils.ClientUtils;
 
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotAuthorizedException;

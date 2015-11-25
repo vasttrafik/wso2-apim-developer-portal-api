@@ -5,9 +5,9 @@ import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.Document;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.pagination.PaginatedList;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.clients.ProxyClient;
+import org.vasttrafik.wso2.carbon.common.api.utils.ClientUtils;
 import org.vasttrafik.wso2.carbon.common.api.utils.RegistryUtils;
 import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
-import org.vasttrafik.wso2.carbon.identity.api.utils.ClientUtils;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

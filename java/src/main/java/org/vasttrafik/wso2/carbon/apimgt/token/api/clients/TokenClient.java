@@ -1,6 +1,6 @@
 package org.vasttrafik.wso2.carbon.apimgt.token.api.clients;
 
-import org.vasttrafik.wso2.carbon.identity.api.utils.ClientUtils;
+import org.vasttrafik.wso2.carbon.common.api.utils.ClientUtils;
 
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
