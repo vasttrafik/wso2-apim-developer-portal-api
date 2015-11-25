@@ -403,6 +403,51 @@
 				}
 			}
 		},
+		"/apis/{apiId}/swagger/{resourceName}": {
+			"parameters": [
+				{
+					"$ref": "#/parameters/apiId"
+				},
+				{
+					"name": "resourceName",
+					"in": "path",
+					"description": "WSO2 resource name",
+					"required": true,
+					"type": "string"
+				}
+			],
+			"get": {
+				"description": "Get swagger details for the given API endpoint",
+				"parameters": [
+					{
+						"$ref": "#/parameters/Accept"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK Requested resource will be returned",
+						"headers": {
+							"Content-Type": {
+								"description": "The content type of the body.",
+								"type": "string"
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found. Requested resource does not exist.",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					},
+					"406": {
+						"description": "Not Acceptable. The requested media type is not supported",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			}
+		},
 		"/applications": {
 			"get": {
 				"description": "Get a list of Applications created. For subscribers, the list will be restricted by ownership.",

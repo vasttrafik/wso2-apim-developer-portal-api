@@ -121,10 +121,24 @@ public class APIs implements ResourceBundleAware {
     ) {
         ResponseUtils.checkParameter(resourceBundle, "apiId", true, new String[]{}, apiId);
 
+        return getJson(apiId, "api-doc", authorization);
+    }
+
+    @GET
+    @Path("{apiId}/swagger/{resourceName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getJson(
+            @PathParam("apiId") final String apiId,
+            @PathParam("resourceName") final String resourceName,
+            @HeaderParam("Authorization") final String authorization
+    ) {
+        ResponseUtils.checkParameter(resourceBundle, "apiId", true, new String[]{}, apiId);
+        ResponseUtils.checkParameter(resourceBundle, "resourceName", true, new String[]{}, resourceName);
+
         try {
             final API api = getProxyClient(authorization).getAPI(apiId);
-            final String pathFormat = "/_system/governance/apimgt/applicationdata/api-docs/%s-%s-%s/api-doc.json";
-            final String path = String.format(pathFormat, api.getName(), api.getVersion(), api.getProvider());
+            final String pathFormat = "/_system/governance/apimgt/applicationdata/api-docs/%s-%s-%s/1.2/%s";
+            final String path = String.format(pathFormat, api.getName(), api.getVersion(), api.getProvider(), resourceName);
 
             final Object content = RegistryUtils.getContent(path);
             return Response.ok(content).build();
