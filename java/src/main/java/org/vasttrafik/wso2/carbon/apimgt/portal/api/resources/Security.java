@@ -1,6 +1,5 @@
 package org.vasttrafik.wso2.carbon.apimgt.portal.api.resources;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -70,16 +69,22 @@ public class Security implements ResourceBundleAware {
     ) {
         ResponseUtils.checkParameter(resourceBundle, "action", true, new String[]{"login", "logout", "refreshToken"}, action);
 
-        switch (StringUtils.defaultString(action)) {
-            case "login":
-                return login(authorization, credentials);
-            case "logout":
-                return logout(authorization);
-            case "refreshToken":
-                return login(authorization, credentials); // Refresh Token is currently not supported.
+        try {
+            switch (action) {
+                case "login":
+                    return login(authorization, credentials);
+                case "logout":
+                    return logout(authorization);
+                case "refreshToken":
+                    return login(authorization, credentials); // Refresh Token is currently not supported.
+                default:
+                    throw new IllegalStateException();
+            }
+        } catch (final BadRequestException | NotAuthorizedException | NotFoundException exception) {
+            throw exception;
+        } catch (final Exception exception) {
+            throw new InternalServerErrorException(exception);
         }
-
-        throw new InternalServerErrorException();
     }
 
     private Response login(final String authorization, final Credentials credentials) {
@@ -127,7 +132,7 @@ public class Security implements ResourceBundleAware {
              */
             OauthData oauthData = proxyClient.getDefaultApplicationOauthData();
             oauthData.setValidityTime(TOKEN_VALIDITY_TIME);
-            oauthData = proxyClient.refreshDefaultApplicationOauthData(oauthData);
+            oauthData = proxyClient.generateDefaultApplicationOauthData(oauthData);
             final AccessToken accessToken = AccessToken.valueOf(oauthData.getToken(), null, oauthData.getValidityTime());
 
             /**

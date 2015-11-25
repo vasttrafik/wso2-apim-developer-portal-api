@@ -26,6 +26,16 @@ public class OauthData {
         return this;
     }
 
+    public OauthData setKey(final String key) {
+        this.key = key;
+        return this;
+    }
+
+    public OauthData setSecret(final String secret) {
+        this.secret = secret;
+        return this;
+    }
+
     public OauthData setValidityTime(final String validityTime) {
         this.validityTime = validityTime;
         return this;

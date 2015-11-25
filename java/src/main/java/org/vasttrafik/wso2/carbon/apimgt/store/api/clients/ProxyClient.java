@@ -36,14 +36,22 @@ public final class ProxyClient implements ResourceBundleAware {
         throw new InternalServerErrorException(ResponseUtils.serverError(resourceBundle, 2001L, new Object[][]{{Constants.DEFAULT_APPLICATION}}));
     }
 
-    public OauthData refreshDefaultApplicationOauthData(OauthData oauthData) {
-        final RefreshTokenDTO.Key key = storeClient.refreshToken(
-                oauthData.getToken(),
-                oauthData.getKey(),
-                oauthData.getSecret(),
-                oauthData.getValidityTime()
-        ).data.key;
-        return oauthData.setToken(key.accessToken);
+    public OauthData generateDefaultApplicationOauthData(OauthData oauthData) {
+        if (oauthData.getToken() != null) {
+            final RefreshTokenDTO.Key key = storeClient.refreshToken(
+                    oauthData.getToken(),
+                    oauthData.getKey(),
+                    oauthData.getSecret(),
+                    oauthData.getValidityTime()
+            ).data.key;
+            return oauthData.setToken(key.accessToken).setKey(key.consumerKey).setSecret(key.consumerSecret);
+        } else {
+            final GenerateApplicationKeyDTO.Key key = storeClient.generateApplicationKey(
+                    Constants.DEFAULT_APPLICATION,
+                    oauthData.getValidityTime()
+            ).data.key;
+            return oauthData.setToken(key.accessToken);
+        }
     }
 
 
