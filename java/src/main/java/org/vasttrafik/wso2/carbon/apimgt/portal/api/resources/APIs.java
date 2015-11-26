@@ -26,7 +26,12 @@ public class APIs implements ResourceBundleAware {
         if (authorization == null) {
             return new ProxyClient(ClientUtils.ADMIN_USER_NAME, ClientUtils.ADMIN_PASSWORD);
         } else {
-            final String userName = Security.validateToken(authorization);
+            final String userName;
+            try {
+                userName = Security.validateToken(authorization);
+            } catch (Exception e) {
+                throw new NotAuthorizedException(ResponseUtils.notAuthorizedError(resourceBundle, 2003L, new Object[][]{}));
+            }
             return Security.getClient(userName);
         }
     }
