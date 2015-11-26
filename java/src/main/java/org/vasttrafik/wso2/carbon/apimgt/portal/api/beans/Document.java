@@ -1,9 +1,11 @@
 package org.vasttrafik.wso2.carbon.apimgt.portal.api.beans;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.query.Query;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.URLCodec;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.beans.DocumentDTO;
+import org.vasttrafik.wso2.carbon.common.api.utils.RegistryUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,22 +22,37 @@ public class Document {
     private String name;
     private Type type;
     private String summary;
-    private String content;
     private String url;
+
+    @JsonIgnore
+    private String content;
+    @JsonIgnore
+    private String filePath;
 
     public static Document valueOf(final DocumentDTO documentDTO) {
         final Document document = new Document();
         document.name = documentDTO.name;
         document.type = Type.valueOf(documentDTO.sourceType.name().toLowerCase());
         document.summary = documentDTO.summary;
-        document.content = null;
         document.url = documentDTO.sourceUrl;
+        document.content = documentDTO.content;
+        document.filePath = documentDTO.filePath;
         return document;
     }
 
     @JsonProperty("id")
     public String getId() {
         return URLCodec.encodeUTF8(name);
+    }
+
+    public Object getContent() {
+        if (Type.file.equals(type) && filePath != null) {
+            try {
+                return RegistryUtils.getContent(filePath.substring("/registry/resource".length()));
+            } catch (final Exception exception) {
+            }
+        }
+        return content;
     }
 
     public boolean matchesAny(String query) {

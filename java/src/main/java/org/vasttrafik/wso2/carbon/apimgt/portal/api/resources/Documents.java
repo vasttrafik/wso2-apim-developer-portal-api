@@ -15,6 +15,7 @@ import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.util.List;
 
@@ -67,6 +68,30 @@ public class Documents implements ResourceBundleAware {
             final ProxyClient client = APIs.getProxyClient(authorization);
             final API api = client.getAPI(apiId);
             return client.getDocument(api, documentId);
+        } catch (final BadRequestException | NotAuthorizedException | NotFoundException exception) {
+            throw exception;
+        } catch (Exception exception) {
+            throw new InternalServerErrorException(ResponseUtils.serverError(exception));
+        }
+    }
+
+    @GET
+    @Path("{documentId}/content")
+    public Response getDocumentContent(
+            @PathParam("apiId") final String apiId,
+            @PathParam("documentId") final String documentId,
+            @HeaderParam("Authorization") final String authorization,
+            @HeaderParam("If-None-Match") final String ifNoneMatch,
+            @HeaderParam("If-Modified-Since") final String ifModifiedSince
+    ) {
+        ResponseUtils.checkParameter(resourceBundle, "apiId", true, new String[]{}, apiId);
+        ResponseUtils.checkParameter(resourceBundle, "documentId", true, new String[]{}, documentId);
+
+        try {
+            final ProxyClient client = APIs.getProxyClient(authorization);
+            final API api = client.getAPI(apiId);
+            final Document document = client.getDocument(api, documentId);
+            return Response.ok(document.getContent()).build();
         } catch (final BadRequestException | NotAuthorizedException | NotFoundException exception) {
             throw exception;
         } catch (Exception exception) {

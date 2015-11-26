@@ -318,11 +318,71 @@
 					"$ref": "#/parameters/apiId"
 				},
 				{
-					"name": "documentId",
-					"in": "path",
-					"description": "Document Id",
-					"required": true,
-					"type": "string"
+					"$ref": "#/parameters/documentId"
+				}
+			]
+		},
+		"/apis/{apiId}/documents/{documentId}/content": {
+			"get": {
+				"description": "Get the document content",
+				"parameters": [
+					{
+						"$ref": "#/parameters/Accept"
+					},
+					{
+						"$ref": "#/parameters/If-None-Match"
+					},
+					{
+						"$ref": "#/parameters/If-Modified-Since"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK Document content returned.",
+						"headers": {
+							"Content-Type": {
+								"description": "The content type of the body.",
+								"type": "string"
+							},
+							"ETag": {
+								"description": "Entity Tag of the response resource. Used by caches, or in conditional requests.",
+								"type": "string"
+							},
+							"Last-Modified": {
+								"description": "Date and time the resource has been modifed the last time. Used by caches, or in conditional reuquests.",
+								"type": "string"
+							}
+						}
+					},
+					"304": {
+						"description": "Not Modified. Empty body because the client has already the latest version of the requested resource."
+					},
+					"401": {
+						"description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					},
+					"404": {
+						"description": "Not Found. Requested Document does not exist.",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					},
+					"406": {
+						"description": "Not Acceptable. The requested media type is not supported",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			},
+			"parameters": [
+				{
+					"$ref": "#/parameters/apiId"
+				},
+				{
+					"$ref": "#/parameters/documentId"
 				}
 			]
 		},
@@ -1132,6 +1192,13 @@
 			"required": true,
 			"type": "integer",
 			"format": "int32"
+		},
+		"documentId": {
+			"name": "documentId",
+			"in": "path",
+			"description": "Document Id",
+			"required": true,
+			"type": "string"
 		},
 		"subscriptionId": {
 			"name": "subscriptionId",
