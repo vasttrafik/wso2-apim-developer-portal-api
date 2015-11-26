@@ -2,6 +2,7 @@ package org.vasttrafik.wso2.carbon.apimgt.portal.api.beans;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.query.Query;
+import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.URLCodec;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.beans.APIDTO;
 
 import javax.ws.rs.core.UriBuilder;
@@ -21,7 +22,7 @@ public class API {
     private String status;
 
     public static String getId(final String name, final String version, final String provider) {
-        return String.format("%s--%s_%s", name, version, provider);
+        return URLCodec.encodeUTF8(String.format("%s--%s_%s", name, version, provider));
     }
 
     public static API valueOf(final APIDTO apidto) {

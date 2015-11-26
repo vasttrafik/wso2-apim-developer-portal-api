@@ -1,6 +1,8 @@
 package org.vasttrafik.wso2.carbon.apimgt.portal.api.beans;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.query.Query;
+import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.URLCodec;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.beans.DocumentDTO;
 
 import java.util.HashMap;
@@ -15,7 +17,6 @@ public class Document {
         file, inline, url
     }
 
-    private Integer id;
     private String name;
     private Type type;
     private String summary;
@@ -24,13 +25,17 @@ public class Document {
 
     public static Document valueOf(final DocumentDTO documentDTO) {
         final Document document = new Document();
-        document.id = documentDTO.name.hashCode(); // TODO: Documents have ID in the Swagger documentation;
         document.name = documentDTO.name;
         document.type = Type.valueOf(documentDTO.sourceType.name().toLowerCase());
         document.summary = documentDTO.summary;
         document.content = null;
         document.url = documentDTO.sourceUrl;
         return document;
+    }
+
+    @JsonProperty("id")
+    public String getId() {
+        return URLCodec.encodeUTF8(name);
     }
 
     public boolean matchesAny(String query) {
@@ -48,7 +53,7 @@ public class Document {
 
     private Map<String, String> getMap() {
         final Map<String, String> map = new HashMap<>();
-        map.put("id", String.valueOf(id));
+        map.put("id", getId());
         map.put("name", name);
         map.put("type", type.name());
         map.put("summary", summary);
