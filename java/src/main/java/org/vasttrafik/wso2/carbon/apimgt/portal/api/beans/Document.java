@@ -2,6 +2,7 @@ package org.vasttrafik.wso2.carbon.apimgt.portal.api.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.StringUtils;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.query.Query;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.URLCodec;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.beans.DocumentDTO;
@@ -15,11 +16,22 @@ import java.util.Map;
  */
 public class Document {
 
-    public enum Type {
+    public enum Source {
         file, inline, url
     }
 
+    public static class Type {
+        private String type;
+        private String otherType;
+
+        private Type(final String type, final String otherType) {
+            this.type = type;
+            this.otherType = otherType;
+        }
+    }
+
     private String name;
+    private Source source;
     private Type type;
     private String summary;
     private String url;
@@ -32,7 +44,8 @@ public class Document {
     public static Document valueOf(final DocumentDTO documentDTO) {
         final Document document = new Document();
         document.name = documentDTO.name;
-        document.type = Type.valueOf(documentDTO.sourceType.name().toLowerCase());
+        document.source = Source.valueOf(documentDTO.sourceType.name().toLowerCase());
+        document.type = new Type(documentDTO.type, documentDTO.otherTypeName);
         document.summary = documentDTO.summary;
         document.url = documentDTO.sourceUrl;
         document.content = documentDTO.content;
@@ -46,7 +59,7 @@ public class Document {
     }
 
     public Object getContent() {
-        if (Type.file.equals(type) && filePath != null) {
+        if (Source.file.equals(source) && filePath != null) {
             try {
                 return RegistryUtils.getContent(filePath.substring("/registry/resource".length()));
             } catch (final Exception exception) {
@@ -72,7 +85,7 @@ public class Document {
         final Map<String, String> map = new HashMap<>();
         map.put("id", getId());
         map.put("name", name);
-        map.put("type", type.name());
+        map.put("type", source.name());
         map.put("summary", summary);
         return map;
     }

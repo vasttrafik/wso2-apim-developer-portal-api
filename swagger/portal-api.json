@@ -1411,7 +1411,7 @@
 				"name": {
 					"type": "string"
 				},
-				"type": {
+				"source": {
 					"type": "array",
 					"items": {
 						"type": "string",
@@ -1420,6 +1420,17 @@
 							"inline",
 							"url"
 						]
+					}
+				},
+				"type": {
+					"type": "object",
+					"properties": {
+						"type": {
+							"type": "string"
+						},
+						"otherType": {
+							"type": "string"
+						}
 					}
 				},
 				"summary": {
