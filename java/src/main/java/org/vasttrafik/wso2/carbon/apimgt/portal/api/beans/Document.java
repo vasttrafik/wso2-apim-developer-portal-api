@@ -35,6 +35,7 @@ public class Document {
     private Type type;
     private String summary;
     private String url;
+    private String fileName;
 
     @JsonIgnore
     private String content;
@@ -50,6 +51,7 @@ public class Document {
         document.url = documentDTO.sourceUrl;
         document.content = documentDTO.content;
         document.filePath = documentDTO.filePath;
+        document.fileName = URLCodec.encodeUTF8(StringUtils.substringAfterLast(document.filePath, "/"));
         return document;
     }
 
