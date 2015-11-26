@@ -1205,8 +1205,7 @@
 			"in": "path",
 			"description": "Subscription Id",
 			"required": true,
-			"type": "integer",
-			"format": "int32"
+			"type": "string"
 		},
 		"limit": {
 			"name": "limit",

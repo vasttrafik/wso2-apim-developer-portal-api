@@ -46,7 +46,7 @@ public class Subscriptions implements ResourceBundleAware {
     @GET
     @Path("{subscriptionId}")
     public Subscription getSubscription(
-            @PathParam("subscriptionId") final Integer subscriptionId,
+            @PathParam("subscriptionId") final String subscriptionId,
             @HeaderParam("If-None-Match") final String ifNoneMatch,
             @HeaderParam("If-Modified-Since") final String ifModifiedSince
     ) {
@@ -70,8 +70,7 @@ public class Subscriptions implements ResourceBundleAware {
         ResponseUtils.checkParameter(resourceBundle, "apiName", true, new String[]{}, subscription.getApi().getName());
         ResponseUtils.checkParameter(resourceBundle, "apiVersion", true, new String[]{}, subscription.getApi().getVersion());
         ResponseUtils.checkParameter(resourceBundle, "apiProvider", true, new String[]{}, subscription.getApi().getProvider());
-        ResponseUtils.checkParameter(resourceBundle, "applicationName", true, new String[]{}, subscription.getApplication().getName());
-        ResponseUtils.checkParameter(resourceBundle, "applicationTier", true, new String[]{}, subscription.getApplication().getThrottlingTier());
+        ResponseUtils.checkParameter(resourceBundle, "applicationId", true, new String[]{}, String.valueOf(subscription.getApplication().getId()));
 
         try {
             final ProxyClient client = Security.getClient(securityContext.getUserPrincipal().getName());
@@ -87,7 +86,7 @@ public class Subscriptions implements ResourceBundleAware {
     @DELETE
     @Path("{subscriptionId}")
     public void deleteSubscriptions(
-            @PathParam("subscriptionId") final Integer subscriptionId,
+            @PathParam("subscriptionId") final String subscriptionId,
             @HeaderParam("If-None-Match") final String ifNoneMatch,
             @HeaderParam("If-Unmodified-Since") final String ifUnmodifiedSince
     ) {

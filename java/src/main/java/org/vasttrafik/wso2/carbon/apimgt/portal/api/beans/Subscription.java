@@ -1,26 +1,38 @@
 package org.vasttrafik.wso2.carbon.apimgt.portal.api.beans;
 
-import org.vasttrafik.wso2.carbon.apimgt.store.api.beans.SubscriptionsItemDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author Daniel Oskarsson <daniel.oskarsson@gmail.com>
  */
 public class Subscription {
 
-    private Integer id;
     private Application application;
     private API api;
     private String tier;
     private String status;
 
-    public static Subscription valueOf(final Integer id, final SubscriptionsItemDTO subscriptionsItemDTO, final Application application, final API api) {
+    @JsonIgnore
+    private Integer applicationId;
+
+    public static String getId(final Integer applicationId, final String apiId) {
+        return applicationId + "-" + apiId;
+    }
+
+    public static Subscription valueOf(final Integer applicationId, final Application application, final API api, final String tier, final String status) {
         final Subscription subscription = new Subscription();
-        subscription.id = id;
-        subscription.tier = subscriptionsItemDTO.tier;
-        subscription.status = subscriptionsItemDTO.status;
-        subscription.api = api;
+        subscription.applicationId = applicationId;
         subscription.application = application;
+        subscription.api = api;
+        subscription.tier = tier;
+        subscription.status = status;
         return subscription;
+    }
+
+    @JsonProperty("id")
+    public String getId() {
+        return Subscription.getId(applicationId, api.getId());
     }
 
     public API getApi() {
@@ -31,7 +43,8 @@ public class Subscription {
         return application;
     }
 
-    public Integer getId() {
-        return id;
+    public Subscription setApplication(final Application application) {
+        this.application = application;
+        return this;
     }
 }

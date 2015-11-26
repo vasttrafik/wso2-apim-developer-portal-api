@@ -10,7 +10,9 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Daniel Oskarsson <daniel.oskarsson@gmail.com>
@@ -27,8 +29,8 @@ public final class ProxyClient implements ResourceBundleAware {
     /// Security methods
 
     public OauthData getDefaultApplicationOauthData() {
-        final List<SubscriptionDTO> subscriptionDTOs = storeClient.getSubscriptions().subscriptions;
-        for (SubscriptionDTO subscriptionDTO : subscriptionDTOs) {
+        final List<SubscriptionDTO> subscriptionDTOs = storeClient.getAllSubscriptions().subscriptions;
+        for (final SubscriptionDTO subscriptionDTO : subscriptionDTOs) {
             if (Constants.DEFAULT_APPLICATION.equals(subscriptionDTO.name)) {
                 return OauthData.valueOf(subscriptionDTO);
             }
@@ -127,20 +129,53 @@ public final class ProxyClient implements ResourceBundleAware {
     /// Application methods
 
     public List<Application> getApplications(final String query) {
-        final List<ApplicationDTO> applicationDTOs = storeClient.getApplications().applications;
-        final List<SubscriptionDTO> subscriptionDTOs = storeClient.getSubscriptions().subscriptions;
-
         final List<Application> list = new ArrayList<>();
+
+        // Map of APIs with API ID as key
+        final Map<String, API> apis = new HashMap<>();
+        for (final API api : getAPIs(null)) {
+            apis.put(api.getId(), api);
+        }
+
+        // Map of SubscriptionDTOs with Application/Subscription ID as key
+        final Map<Integer, SubscriptionDTO> subscriptionDTOs = new HashMap<>();
+        for (final SubscriptionDTO subscriptionDTO : storeClient.getAllSubscriptions().subscriptions) {
+            subscriptionDTOs.put(subscriptionDTO.id, subscriptionDTO);
+        }
+
+        // Iterate through list of ApplicationDTOs and create what is needed
+        final List<ApplicationDTO> applicationDTOs = storeClient.getApplications().applications;
         for (final ApplicationDTO applicationDTO : applicationDTOs) {
-            for (final SubscriptionDTO subscriptionDTO : subscriptionDTOs) {
-                if (subscriptionDTO.id.equals(applicationDTO.id)) {
-                    final Application application = Application.valueOf(applicationDTO, subscriptionDTO);
-                    if (!application.getName().equals(Constants.DEFAULT_APPLICATION) && application.matches(query)) {
-                        list.add(application);
-                    }
-                }
+
+            // Get the corresponding SubscriptionDTO for the given application
+            final SubscriptionDTO subscriptionDTO = subscriptionDTOs.get(applicationDTO.id);
+
+            // Create a list of subscriptions with application being set to null
+            final List<Subscription> subscriptions = new ArrayList<>();
+            for (final SubscriptionByApplicationDTO subscriptionByApplicationDTO : storeClient.getSubscriptionsByApplication(applicationDTO.name).apis) {
+                final API api = apis.get(API.getId(subscriptionByApplicationDTO.apiName, subscriptionByApplicationDTO.apiVersion, subscriptionByApplicationDTO.apiProvider));
+                final Subscription subscription = Subscription.valueOf(applicationDTO.id, null, api, subscriptionByApplicationDTO.subscribedTier, subscriptionByApplicationDTO.status);
+                subscriptions.add(subscription);
+            }
+
+            // At this point we have all that is needed to product a list of applications with subscriptions, or a list of subscriptions with application
+            final Application application = new Application()
+                    .setId(applicationDTO.id)
+                    .setName(applicationDTO.name)
+                    .setDescription(applicationDTO.description)
+                    .setStatus(applicationDTO.status)
+                    .setThrottlingTier(applicationDTO.tier)
+                    .setCallbackUrl(applicationDTO.callbackUrl)
+                    .setConsumerKey(subscriptionDTO.prodConsumerKey)
+                    .setConsumerSecret(subscriptionDTO.prodConsumerSecret)
+                    .setAccessToken(subscriptionDTO.prodKey)
+                    .setSubscriptions(subscriptions);
+
+            if (!application.getName().equals(Constants.DEFAULT_APPLICATION) && application.matches(query)) {
+                list.add(application);
             }
         }
+
         return list;
     }
 
@@ -193,24 +228,18 @@ public final class ProxyClient implements ResourceBundleAware {
     /// Subscription methods
 
     public List<Subscription> getSubscriptions() {
-        final List<SubscriptionDTO> subscriptionDTOs = storeClient.getSubscriptions().subscriptions;
-
         final List<Subscription> list = new ArrayList<>();
-        for (final SubscriptionDTO subscriptionDTO : subscriptionDTOs) {
-            if (!subscriptionDTO.name.equals(Constants.DEFAULT_APPLICATION)) {
-                for (final SubscriptionsItemDTO subscriptionsItemDTO : subscriptionDTO.subscriptions) {
-                    final Application application = getApplication(subscriptionDTO.id);
-                    final API api = getAPI(API.getId(subscriptionsItemDTO.name, subscriptionsItemDTO.version, subscriptionsItemDTO.provider));
-                    list.add(Subscription.valueOf(subscriptionDTO.id, subscriptionsItemDTO, application, api));
-                }
+        for (final Application application : getApplications(null)) {
+            for (final Subscription subscription : application.getSubscriptions()) {
+                list.add(subscription.setApplication(application.setSubscriptions(null)));
             }
         }
         return list;
     }
 
-    public Subscription getSubscription(final Integer id) {
+    public Subscription getSubscription(final String id) {
         final List<Subscription> subscriptions = getSubscriptions();
-        for (Subscription subscription : subscriptions) {
+        for (final Subscription subscription : subscriptions) {
             if (subscription.getId().equals(id)) {
                 return subscription;
             }
@@ -220,14 +249,15 @@ public final class ProxyClient implements ResourceBundleAware {
 
     public Subscription addSubscription(final Subscription subscription) {
         final API api = subscription.getApi();
-        final Application application = subscription.getApplication();
+        final Application application = getApplication(subscription.getApplication().getId());
         storeClient.addSubscription(api.getName(), api.getVersion(), api.getProvider(), application.getThrottlingTier(), application.getName());
-        return getSubscription(subscription.getId());
+        return getSubscription(Subscription.getId(application.getId(), API.getId(api.getName(), api.getVersion(), api.getProvider())));
     }
 
     public void removeSubscription(final Subscription subscription) {
         final API api = subscription.getApi();
-        storeClient.removeSubscription(api.getName(), api.getVersion(), api.getProvider(), subscription.getId());
+        final Application application = subscription.getApplication();
+        storeClient.removeSubscription(api.getName(), api.getVersion(), api.getProvider(), application.getId());
     }
 
 }

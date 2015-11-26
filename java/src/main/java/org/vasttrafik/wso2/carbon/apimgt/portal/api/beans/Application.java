@@ -1,8 +1,6 @@
 package org.vasttrafik.wso2.carbon.apimgt.portal.api.beans;
 
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.query.Query;
-import org.vasttrafik.wso2.carbon.apimgt.store.api.beans.ApplicationDTO;
-import org.vasttrafik.wso2.carbon.apimgt.store.api.beans.SubscriptionDTO;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,20 +22,39 @@ public class Application {
     private String accessToken;
     private List<Subscription> subscriptions;
 
-    public static Application valueOf(final ApplicationDTO applicationDTO, final SubscriptionDTO subscriptionDTO) {
-        final Application application = new Application();
-        application.id = applicationDTO.id;
-        application.name = applicationDTO.name;
-        application.throttlingTier = applicationDTO.tier;
-        application.callbackUrl = applicationDTO.callbackUrl;
-        application.status = applicationDTO.status;
-        application.description = applicationDTO.description;
-        if (subscriptionDTO != null) {
-            application.consumerKey = subscriptionDTO.prodConsumerKey;
-            application.consumerSecret = subscriptionDTO.prodConsumerSecret;
-            application.accessToken = subscriptionDTO.prodKey;
-        }
-        return application;
+    public Application setSubscriptions(final List<Subscription> subscriptions) {
+        this.subscriptions = subscriptions;
+        return this;
+    }
+
+    public Application setCallbackUrl(final String callbackUrl) {
+        this.callbackUrl = callbackUrl;
+        return this;
+    }
+
+    public Application setDescription(final String description) {
+        this.description = description;
+        return this;
+    }
+
+    public Application setId(final Integer id) {
+        this.id = id;
+        return this;
+    }
+
+    public Application setThrottlingTier(final String throttlingTier) {
+        this.throttlingTier = throttlingTier;
+        return this;
+    }
+
+    public Application setName(final String name) {
+        this.name = name;
+        return this;
+    }
+
+    public Application setStatus(final String status) {
+        this.status = status;
+        return this;
     }
 
     public Application setAccessToken(final String accessToken) {
@@ -71,6 +88,10 @@ public class Application {
         return consumerSecret;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
@@ -85,6 +106,10 @@ public class Application {
 
     public String getCallbackUrl() {
         return callbackUrl;
+    }
+
+    public List<Subscription> getSubscriptions() {
+        return subscriptions;
     }
 
     public boolean matches(String query) {

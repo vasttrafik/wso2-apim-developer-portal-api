@@ -140,7 +140,7 @@ final class StoreClient implements ResourceBundleAware {
                 .request().cookie(cookie).post(Entity.form(form), WrapperDTO.class));
     }
 
-    WrapperDTO removeApplication(String name) {
+    WrapperDTO removeApplication(final String name) {
         final Form form = new Form()
                 .param(Constants.ACTION, "removeApplication")
                 .param("application", name);
@@ -149,14 +149,25 @@ final class StoreClient implements ResourceBundleAware {
                 .request().cookie(cookie).post(Entity.form(form), WrapperDTO.class));
     }
 
-    SubscriptionsDTO getSubscriptions() {
+    SubscriptionsDTO getAllSubscriptions() {
         return validateDTO(TARGET.path("subscription/subscription-list/ajax/subscription-list.jag")
                 .queryParam(Constants.ACTION, "getAllSubscriptions")
                 .request().cookie(cookie).get(SubscriptionsDTO.class));
     }
 
     /**
-     * Invoking this method works fine and the result shows up in the store web app. It does NOT however show up in getSubscriptions result.
+     * This is required because there is a Store API bug that makes getAllSubscriptions only returns subscriptions
+     * for a one of the applications in the list.
+     */
+    SubscriptionByApplicationsDTO getSubscriptionsByApplication(final String applicationName) {
+        return validateDTO(TARGET.path("subscription/subscription-list/ajax/subscription-list.jag")
+                .queryParam(Constants.ACTION, "getSubscriptionByApplication")
+                .queryParam("app", applicationName)
+                .request().cookie(cookie).get(SubscriptionByApplicationsDTO.class));
+    }
+
+    /**
+     * Invoking this method works fine and the result shows up in the store web app. It does NOT however show up in getAllSubscriptions result.
      * Also note that the Store API does not seem to support the documented version where application id is used instead of application name.
      */
     WrapperDTO addSubscription(final String apiName, final String apiVersion, final String apiProvider, final String applicationTier, final String applicationName) {
