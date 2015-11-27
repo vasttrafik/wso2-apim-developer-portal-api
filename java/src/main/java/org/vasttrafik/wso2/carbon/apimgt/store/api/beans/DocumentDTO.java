@@ -16,5 +16,6 @@ public final class DocumentDTO {
     public String sourceUrl;
     public String filePath;
     public String type;
+    public String otherTypeName;
 
 }

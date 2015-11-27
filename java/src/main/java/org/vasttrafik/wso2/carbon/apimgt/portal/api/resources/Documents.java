@@ -22,13 +22,13 @@ import java.util.List;
 /**
  * @author Daniel Oskarsson <daniel.oskarsson@gmail.com>
  */
-@Produces(MediaType.APPLICATION_JSON)
 @Path("apis/{apiId}/documents")
 public class Documents implements ResourceBundleAware {
 
     @Context
     private SecurityContext securityContext;
 
+    @Produces(MediaType.APPLICATION_JSON)
     @GET
     public PaginatedList<Document> getDocuments(
             @PathParam("apiId") final String apiId,
@@ -52,6 +52,7 @@ public class Documents implements ResourceBundleAware {
         }
     }
 
+    @Produces(MediaType.APPLICATION_JSON)
     @GET
     @Path("{documentId}")
     public Document getDocument(
@@ -98,4 +99,33 @@ public class Documents implements ResourceBundleAware {
             throw new InternalServerErrorException(ResponseUtils.serverError(exception));
         }
     }
+
+    @GET
+    @Path("{documentId}/content/{fileName}")
+    public Response getDocumentContentFile(
+            @PathParam("apiId") final String apiId,
+            @PathParam("documentId") final String documentId,
+            @PathParam("fileName") final String fileName,
+            @HeaderParam("Authorization") final String authorization,
+            @HeaderParam("If-None-Match") final String ifNoneMatch,
+            @HeaderParam("If-Modified-Since") final String ifModifiedSince
+    ) {
+        ResponseUtils.checkParameter(resourceBundle, "apiId", true, new String[]{}, apiId);
+        ResponseUtils.checkParameter(resourceBundle, "documentId", true, new String[]{}, documentId);
+
+        try {
+            final ProxyClient client = APIs.getProxyClient(authorization);
+            final API api = client.getAPI(apiId);
+            final Document document = client.getDocument(api, documentId);
+            return Response.ok(document.getContent())
+                    .type(MediaType.APPLICATION_OCTET_STREAM)
+                    .header("Content-Disposition", "attachment; filename=\"" + fileName + "\"")
+                    .build();
+        } catch (final BadRequestException | NotAuthorizedException | NotFoundException exception) {
+            throw exception;
+        } catch (Exception exception) {
+            throw new InternalServerErrorException(ResponseUtils.serverError(exception));
+        }
+    }
+
 }
