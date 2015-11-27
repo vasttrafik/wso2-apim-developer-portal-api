@@ -1,1527 +1,1590 @@
 {
-	"swagger": "2.0",
-	"info": {
-		"version": "0.9.0",
-		"title": "Västtrafik REST API for WSO2 API Manager",
-		"description": "This document describe a ** RESTFul API ** for WSO2 **API Manager**.\n\nYou can find the source of this API definition at [here](https://github.com/vasttrafik/wso2-apim-developer-portal-api). It was written with [swagger 2](http://swagger.io/).\n",
-		"contact": {
-			"name": "Västtrafik",
-			"url": "https://developer.vasttrafik.se",
-			"email": "api@vasttrafik.se"
-		},
-		"license": {
-			"name": "Apache 2.0",
-			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-		}
-	},
-	"consumes": [
-		"application/json"
-	],
-	"produces": [
-		"application/json"
-	],
-	"schemes": [
-		"https"
-	],
-	"paths": {
-		"/apis": {
-			"get": {
-				"description": "Get a list of available APIs qualifying under a given search condition.",
-				"parameters": [
-					{
-						"$ref": "#/parameters/limit"
-					},
-					{
-						"$ref": "#/parameters/offset"
-					},
-					{
-						"name": "query",
-						"in": "query",
-						"description": "** Search condition **.\n\nIf no advanced attribute modifier is found search will match the given query string against API Name.\n\nYou can search in attributes by using **\"attribute:\"**modifier.\n\nEg. \"provider:WSO2\" will match if the API provider is wso2. Matching is case-insensitive.\n\nSupported attribute modifiers are [ **name, version, context, status, description, document, provider** ]\n\nDocument is matched against all properties of all documents for all APIs.\n",
-						"type": "string"
-					},
-					{
-						"$ref": "#/parameters/Accept"
-					},
-					{
-						"$ref": "#/parameters/If-None-Match"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK. List of APIs is returned.",
-						"schema": {
-							"title": "APIList",
-							"type": "object",
-							"properties": {
-								"count": {
-									"type": "string"
-								},
-								"next": {
-									"type": "string",
-									"description": "Link for next page. Undefined if no next page."
-								},
-								"previous": {
-									"type": "string",
-									"description": "Link for previous page. Undefined if no previous page."
-								},
-								"list": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/API"
-									}
-								}
-							}
-						},
-						"headers": {
-							"Content-Type": {
-								"description": "The content type of the body.",
-								"type": "string"
-							},
-							"ETag": {
-								"description": "Entity Tag of the response resource. Used by caches, or in conditional requests.",
-								"type": "string"
-							}
-						}
-					},
-					"304": {
-						"description": "Not Modified. Empty body because the client has already the latest version of the requested resource."
-					},
-					"401": {
-						"description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"406": {
-						"description": "Not Acceptable. The requested media type is not supported",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					}
-				}
-			}
-		},
-		"/apis/{apiId}": {
-			"parameters": [
-				{
-					"$ref": "#/parameters/apiId"
-				}
-			],
-			"get": {
-				"description": "Get details of an API",
-				"parameters": [
-					{
-						"$ref": "#/parameters/Accept"
-					},
-					{
-						"$ref": "#/parameters/If-None-Match"
-					},
-					{
-						"$ref": "#/parameters/If-Modified-Since"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK Requested API will be returned",
-						"headers": {
-							"Content-Type": {
-								"description": "The content type of the body.",
-								"type": "string"
-							},
-							"ETag": {
-								"description": "Entity Tag of the response resource. Used by caches, or in conditional requests.",
-								"type": "string"
-							},
-							"Last-Modified": {
-								"description": "Date and time the resource has been modifed the last time. Used by caches, or in conditional reuquests.",
-								"type": "string"
-							}
-						},
-						"schema": {
-							"$ref": "#/definitions/API"
-						}
-					},
-					"304": {
-						"description": "Not Modified. Empty body because the client has already the latest version of the requested resource."
-					},
-					"401": {
-						"description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"404": {
-						"description": "Not Found. Requested API does not exist.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"406": {
-						"description": "Not Acceptable. The requested media type is not supported",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					}
-				}
-			}
-		},
-		"/apis/{apiId}/documents": {
-			"get": {
-				"description": "Get a list of documents belonging to an API",
-				"parameters": [
-					{
-						"$ref": "#/parameters/limit"
-					},
-					{
-						"$ref": "#/parameters/offset"
-					},
-					{
-						"name": "query",
-						"in": "query",
-						"description": "** Search condition **.\n\nIf no advanced attribute modifier is found search will match the given query string against document Name.\n\nYou can search in attributes by using **\"attribute:\"**modifier.\n\nEg. \"type:FILE\" will match if the document type is file. Matching is case-insensitive. \n\nSupported attribute modifiers are [ **name, type, summary** ]\n",
-						"type": "string"
-					},
-					{
-						"$ref": "#/parameters/Accept"
-					},
-					{
-						"$ref": "#/parameters/If-None-Match"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK Document list is returned.",
-						"schema": {
-							"title": "DocumentList",
-							"type": "object",
-							"properties": {
-								"count": {
-									"type": "string"
-								},
-								"next": {
-									"type": "string",
-									"description": "Link for next page. Undefined if no next page."
-								},
-								"previous": {
-									"type": "string",
-									"description": "Link for previous page. Undefined if no previous page."
-								},
-								"list": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/Document"
-									}
-								}
-							}
-						},
-						"headers": {
-							"Content-Type": {
-								"description": "The content type of the body.",
-								"type": "string"
-							},
-							"ETag": {
-								"description": "Entity Tag of the response resource. Used by caches, or in conditional requests.",
-								"type": "string"
-							}
-						}
-					},
-					"304": {
-						"description": "Not Modified. Empty body because the client has already the latest version of the requested resource."
-					},
-					"401": {
-						"description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"404": {
-						"description": "Not Found. Requested API does not exist.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"406": {
-						"description": "Not Acceptable. The requested media type is not supported",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					}
-				}
-			},
-			"parameters": [
-				{
-					"$ref": "#/parameters/apiId"
-				}
-			]
-		},
-		"/apis/{apiId}/documents/{documentId}": {
-			"get": {
-				"description": "Get the document details of an API",
-				"parameters": [
-					{
-						"$ref": "#/parameters/Accept"
-					},
-					{
-						"$ref": "#/parameters/If-None-Match"
-					},
-					{
-						"$ref": "#/parameters/If-Modified-Since"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK Document returned.",
-						"schema": {
-							"$ref": "#/definitions/Document"
-						},
-						"headers": {
-							"Content-Type": {
-								"description": "The content type of the body.",
-								"type": "string"
-							},
-							"ETag": {
-								"description": "Entity Tag of the response resource. Used by caches, or in conditional requests.",
-								"type": "string"
-							},
-							"Last-Modified": {
-								"description": "Date and time the resource has been modifed the last time. Used by caches, or in conditional reuquests.",
-								"type": "string"
-							}
-						}
-					},
-					"304": {
-						"description": "Not Modified. Empty body because the client has already the latest version of the requested resource."
-					},
-					"401": {
-						"description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"404": {
-						"description": "Not Found. Requested Document does not exist.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"406": {
-						"description": "Not Acceptable. The requested media type is not supported",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					}
-				}
-			},
-			"parameters": [
-				{
-					"$ref": "#/parameters/apiId"
-				},
-				{
-					"$ref": "#/parameters/documentId"
-				}
-			]
-		},
-		"/apis/{apiId}/documents/{documentId}/content": {
-			"get": {
-				"description": "Get the document content",
-				"parameters": [
-					{
-						"$ref": "#/parameters/Accept"
-					},
-					{
-						"$ref": "#/parameters/If-None-Match"
-					},
-					{
-						"$ref": "#/parameters/If-Modified-Since"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK Document content returned.",
-						"headers": {
-							"Content-Type": {
-								"description": "The content type of the body.",
-								"type": "string"
-							},
-							"ETag": {
-								"description": "Entity Tag of the response resource. Used by caches, or in conditional requests.",
-								"type": "string"
-							},
-							"Last-Modified": {
-								"description": "Date and time the resource has been modifed the last time. Used by caches, or in conditional reuquests.",
-								"type": "string"
-							}
-						}
-					},
-					"304": {
-						"description": "Not Modified. Empty body because the client has already the latest version of the requested resource."
-					},
-					"401": {
-						"description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"404": {
-						"description": "Not Found. Requested Document does not exist.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"406": {
-						"description": "Not Acceptable. The requested media type is not supported",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					}
-				}
-			},
-			"parameters": [
-				{
-					"$ref": "#/parameters/apiId"
-				},
-				{
-					"$ref": "#/parameters/documentId"
-				}
-			]
-		},
-		"/apis/{apiId}/image": {
-			"parameters": [
-				{
-					"$ref": "#/parameters/apiId"
-				}
-			],
-			"get": {
-				"description": "Get thumbnail image for the given API",
-				"parameters": [
-					{
-						"$ref": "#/parameters/Accept"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK Requested resource will be returned",
-						"headers": {
-							"Content-Type": {
-								"description": "The content type of the body.",
-								"type": "string"
-							}
-						}
-					},
-					"404": {
-						"description": "Not Found. Requested resource does not exist.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"406": {
-						"description": "Not Acceptable. The requested media type is not supported",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					}
-				}
-			}
-		},
-		"/apis/{apiId}/swagger": {
-			"parameters": [
-				{
-					"$ref": "#/parameters/apiId"
-				}
-			],
-			"get": {
-				"description": "Get swagger for the given API",
-				"parameters": [
-					{
-						"$ref": "#/parameters/Accept"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK Requested resource will be returned",
-						"headers": {
-							"Content-Type": {
-								"description": "The content type of the body.",
-								"type": "string"
-							}
-						}
-					},
-					"404": {
-						"description": "Not Found. Requested resource does not exist.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"406": {
-						"description": "Not Acceptable. The requested media type is not supported",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					}
-				}
-			}
-		},
-		"/apis/{apiId}/swagger/{resourceName}": {
-			"parameters": [
-				{
-					"$ref": "#/parameters/apiId"
-				},
-				{
-					"name": "resourceName",
-					"in": "path",
-					"description": "WSO2 resource name",
-					"required": true,
-					"type": "string"
-				}
-			],
-			"get": {
-				"description": "Get swagger details for the given API endpoint",
-				"parameters": [
-					{
-						"$ref": "#/parameters/Accept"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK Requested resource will be returned",
-						"headers": {
-							"Content-Type": {
-								"description": "The content type of the body.",
-								"type": "string"
-							}
-						}
-					},
-					"404": {
-						"description": "Not Found. Requested resource does not exist.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"406": {
-						"description": "Not Acceptable. The requested media type is not supported",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					}
-				}
-			}
-		},
-		"/applications": {
-			"get": {
-				"description": "Get a list of Applications created. For subscribers, the list will be restricted by ownership.",
-				"parameters": [
-					{
-						"$ref": "#/parameters/limit"
-					},
-					{
-						"$ref": "#/parameters/offset"
-					},
-					{
-						"name": "query",
-						"in": "query",
-						"description": "** Search condition **.\n\nIf no advanced attribute modifier is found search will match the given query string against application Name.\n\nYou can search in attributes by using **\"attribute:\"**modifier.\n\nEg. \"status:ACTIVE\" will match if the application status is active. Matching is case-insensitive. \n\nSupported attribute modifiers are [ **name, tier, status, description** ]\n",
-						"type": "string"
-					},
-					{
-						"$ref": "#/parameters/Accept"
-					},
-					{
-						"$ref": "#/parameters/If-None-Match"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK Application list returned.",
-						"schema": {
-							"title": "ApplicationList",
-							"type": "object",
-							"properties": {
-								"count": {
-									"type": "string"
-								},
-								"next": {
-									"type": "string",
-									"description": "Link for next page. Undefined if no next page."
-								},
-								"previous": {
-									"type": "string",
-									"description": "Link for previous page. Undefined if no previous page."
-								},
-								"list": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/Application"
-									}
-								}
-							}
-						},
-						"headers": {
-							"Content-Type": {
-								"description": "The content type of the body.",
-								"type": "string"
-							},
-							"ETag": {
-								"description": "Entity Tag of the response resource. Used by caches, or in conditional requests.",
-								"type": "string"
-							}
-						}
-					},
-					"304": {
-						"description": "Not Modified. Empty body because the client has already the latest version of the requested resource."
-					},
-					"400": {
-						"description": "Bad Request. Invalid request or validation error",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"401": {
-						"description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"406": {
-						"description": "Not Acceptable. The requested media type is not supported",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					}
-				}
-			},
-			"post": {
-				"description": "Create a new Application",
-				"parameters": [
-					{
-						"in": "body",
-						"name": "body",
-						"description": "Application object that needs to be added",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/Application"
-						}
-					},
-					{
-						"$ref": "#/parameters/Content-Type"
-					}
-				],
-				"responses": {
-					"201": {
-						"description": "Created. Successful response with the newly created object as entity in the body.",
-						"schema": {
-							"$ref": "#/definitions/Application"
-						},
-						"headers": {
-							"Content-Type": {
-								"description": "The content type of the body.",
-								"type": "string"
-							},
-							"ETag": {
-								"description": "Entity Tag of the response resource. Used by caches, or in conditional request",
-								"type": "string"
-							}
-						}
-					},
-					"400": {
-						"description": "Bad Request. Invalid request or validation error",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"401": {
-						"description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"415": {
-						"description": "Unsupported media type",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					}
-				}
-			}
-		},
-		"/applications/{applicationId}": {
-			"get": {
-				"description": "Get Application details",
-				"parameters": [
-					{
-						"$ref": "#/parameters/Accept"
-					},
-					{
-						"$ref": "#/parameters/If-None-Match"
-					},
-					{
-						"$ref": "#/parameters/If-Modified-Since"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK Application returned.",
-						"schema": {
-							"$ref": "#/definitions/Application"
-						},
-						"headers": {
-							"Content-Type": {
-								"description": "The content type of the body.",
-								"type": "string"
-							},
-							"ETag": {
-								"description": "Entity Tag of the response resource. Used by caches, or in conditional requests.",
-								"type": "string"
-							},
-							"Last-Modified": {
-								"description": "Date and time the resource has been modifed the last time. Used by caches, or in conditional reuquests.",
-								"type": "string"
-							}
-						}
-					},
-					"304": {
-						"description": "Not Modified. Empty body because the client has already the latest version of the requested resource."
-					},
-					"401": {
-						"description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"404": {
-						"description": "Requested Application does not exist.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"406": {
-						"description": "Not Acceptable. The requested media type is not supported",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					}
-				}
-			},
-			"put": {
-				"description": "Update application details",
-				"parameters": [
-					{
-						"in": "body",
-						"name": "body",
-						"description": "Document object that needs to be added",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/Application"
-						}
-					},
-					{
-						"$ref": "#/parameters/Content-Type"
-					},
-					{
-						"$ref": "#/parameters/If-Match"
-					},
-					{
-						"$ref": "#/parameters/If-Unmodified-Since"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK Application updated.",
-						"schema": {
-							"$ref": "#/definitions/Application"
-						},
-						"headers": {
-							"Content-Type": {
-								"description": "The content type of the body.",
-								"type": "string"
-							},
-							"ETag": {
-								"description": "Entity Tag of the response resource. Used by caches, or in conditional request",
-								"type": "string"
-							},
-							"Last-Modified": {
-								"description": "Date and time the resource has been modifed the last time. Used by caches, or in conditional requests.",
-								"type": "string"
-							}
-						}
-					},
-					"400": {
-						"description": "Bad Request. Invalid request or validation error",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"401": {
-						"description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"404": {
-						"description": "Not Found. The resource to be updated does not exist.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"412": {
-						"description": "Precondition Failed. The request has not been performed because one of the preconditions is not met.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					}
-				}
-			},
-			"delete": {
-				"description": "Remove and application",
-				"parameters": [
-					{
-						"$ref": "#/parameters/If-Match"
-					},
-					{
-						"$ref": "#/parameters/If-Unmodified-Since"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK. Resource successfully deleted."
-					},
-					"401": {
-						"description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"404": {
-						"description": "Not Found. Resource to be deleted does not exist.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"412": {
-						"description": "Precondition Failed. The request has not been performed because one of the preconditions is not met.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					}
-				}
-			},
-			"parameters": [
-				{
-					"$ref": "#/parameters/applicationId"
-				}
-			]
-		},
-		"/applications/{applicationId}/tokens": {
-			"post": {
-				"description": "(Re)Generates an application access token",
-				"parameters": [
-					{
-						"in": "query",
-						"name": "validityTime",
-						"description": "Validity time in seconds.",
-						"required": true,
-						"type": "integer",
-						"format": "int32"
-					},
-					{
-						"$ref": "#/parameters/Content-Type"
-					}
-				],
-				"responses": {
-					"201": {
-						"description": "Created. Successful response with the newly created token object as entity in the body.",
-						"schema": {
-							"$ref": "#/definitions/Application"
-						},
-						"headers": {
-							"Content-Type": {
-								"description": "The content type of the body.",
-								"type": "string"
-							},
-							"ETag": {
-								"description": "Entity Tag of the response resource. Used by caches, or in conditional request",
-								"type": "string"
-							}
-						}
-					},
-					"400": {
-						"description": "Bad Request. Invalid request or validation error",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"401": {
-						"description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"415": {
-						"description": "Unsupported media type",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					}
-				}
-			},
-			 "parameters": [
-				{
-					"$ref": "#/parameters/applicationId"
-				}
-			]
-		},
-		"/security": {
-			"post": {
-				"description": "Performs either a login, a logout or refreshes the access token.",
-				"parameters": [
-					{
-						"in": "query",
-						"name": "action",
-						"description": "The action to perform",
-						"required": true,
-						"type": "string",
-						"enum": [
-							"login",
-							"logout",
-							"refreshToken"
-						]
-					},
-					{
-						"in": "query",
-						"name": "refreshToken",
-						"description": "The refresh token, if trying to refresh the access token",
-						"required": false,
-						"type": "string"
-					},
-					{
-						"in": "body",
-						"name": "body",
-						"description": "Credential object, if trying to login.",
-						"required": false,
-						"schema": {
-							"$ref": "#/definitions/Credentials"
-						}
-					},
-					{
-						"$ref": "#/parameters/Content-Type"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK. Successful response with the refreshed access token as part of the authenticated user object.",
-						"schema": {
-							"$ref": "#/definitions/AuthenticatedUser"
-						},
-						"headers": {
-							"Content-Type": {
-								"description": "The content type of the body.",
-								"type": "string"
-							}
-						}
-					},
-					"201": {
-						"description": "Authorized. Successful response with the newly authenticated user as entity in the body.",
-						"schema": {
-							"$ref": "#/definitions/AuthenticatedUser"
-						},
-						"headers": {
-							"Content-Type": {
-								"description": "The content type of the body.",
-								"type": "string"
-							},
-							"ETag": {
-								"description": "Entity Tag of the response resource. Used by caches, or in conditional request",
-								"type": "string"
-							}
-						}
-					},
-					"204": {
-						"description": "OK. Successful logout."
-					},
-					"400": {
-						"description": "Bad Request. Invalid request or validation error",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"401": {
-						"description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"415": {
-						"description": "Unsupported media type",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					}
-				}
-			}
-		},
-		"/subscriptions": {
-			"get": {
-				"description": "Get subscription list. The list returned will be restricted to those of the logged in user.",
-				"parameters": [
-					{
-						"$ref": "#/parameters/limit"
-					},
-					{
-						"$ref": "#/parameters/offset"
-					},
-					{
-						"$ref": "#/parameters/Accept"
-					},
-					{
-						"$ref": "#/parameters/If-None-Match"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK Subscription list returned.",
-						"schema": {
-							"title": "SubscriptionList",
-							"type": "object",
-							"properties": {
-								"count": {
-									"type": "string"
-								},
-								"next": {
-									"type": "string",
-									"description": "Link for next page. Undefined if no next page."
-								},
-								"previous": {
-									"type": "string",
-									"description": "Link for previous page. Undefined if no previous page."
-								},
-								"list": {
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/Subscription"
-									}
-								}
-							}
-						},
-						"headers": {
-							"Content-Type": {
-								"description": "The content type of the body.",
-								"type": "string"
-							},
-							"ETag": {
-								"description": "Entity Tag of the response resource. Used by caches, or in conditional requests.",
-								"type": "string"
-							}
-						}
-					},
-					"304": {
-						"description": "Not Modified. Empty body because the client has already the latest version of the requested resource."
-					},
-					"401": {
-						"description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"406": {
-						"description": "Not Acceptable. The requested media type is not supported",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					}
-				}
-			},
-			"post": {
-				"description": "Add a new subscription",
-				"parameters": [
-					{
-						"in": "body",
-						"name": "body",
-						"description": "API object that needs to be added",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/Subscription"
-						}
-					},
-					{
-						"$ref": "#/parameters/Content-Type"
-					}
-				],
-				"responses": {
-					"201": {
-						"description": "Created. Successful response with the newly created object as entity in the body.",
-						"schema": {
-							"$ref": "#/definitions/Subscription"
-						},
-						"headers": {
-							"Content-Type": {
-								"description": "The content type of the body.",
-								"type": "string"
-							},
-							"ETag": {
-								"description": "Entity Tag of the response resource. Used by caches, or in conditional request",
-								"type": "string"
-							}
-						}
-					},
-					"400": {
-						"description": "Bad Request. Invalid request or validation error",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"401": {
-						"description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					}
-				}
-			}
-		},
-		"/subscriptions/{subscriptionId}": {
-			"get": {
-				"description": "Get subscription details",
-				"parameters": [
-					{
-						"$ref": "#/parameters/Accept"
-					},
-					{
-						"$ref": "#/parameters/If-None-Match"
-					},
-					{
-						"$ref": "#/parameters/If-Modified-Since"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK Subscription returned",
-						"schema": {
-							"$ref": "#/definitions/Subscription"
-						},
-						"headers": {
-							"Content-Type": {
-								"description": "The content type of the body.",
-								"type": "string"
-							},
-							"ETag": {
-								"description": "Entity Tag of the response resource. Used by caches, or in conditional requests.",
-								"type": "string"
-							},
-							"Last-Modified": {
-								"description": "Date and time the resource has been modifed the last time. Used by caches, or in conditional reuquests.",
-								"type": "string"
-							}
-						}
-					},
-					"304": {
-						"description": "Not Modified. Empty body because the client has already the latest version of the requested resource."
-					},
-					"401": {
-						"description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"404": {
-						"description": "Not Found. Requested Subscription does not exist.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"406": {
-						"description": "Not Acceptable. The requested media type is not supported",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					}
-				}
-			},
-			"delete": {
-				"description": "Remove subscription",
-				"parameters": [
-					{
-						"$ref": "#/parameters/If-Match"
-					},
-					{
-						"$ref": "#/parameters/If-Unmodified-Since"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "OK. Resource successfully deleted."
-					},
-					"401": {
-						"description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"404": {
-						"description": "Not Found. Resource to be deleted does not exist.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					},
-					"412": {
-						"description": "Precondition Failed. The request has not been performed because one of the preconditions is not met.",
-						"schema": {
-							"$ref": "#/definitions/Error"
-						}
-					}
-				}
-			},
-			"parameters": [
-				{
-					"$ref": "#/parameters/subscriptionId"
-				}
-			]
-		}
-	},
-	"parameters": {
-		"apiId": {
-			"name": "apiId",
-			"in": "path",
-			"description": "**API ID** consisting name version and provider of the API. \nShould be formated as **name--version_provider**\n",
-			"required": true,
-			"type": "string"
-		},
-		"applicationId": {
-			"name": "applicationId",
-			"in": "path",
-			"description": "Application Id",
-			"required": true,
-			"type": "integer",
-			"format": "int32"
-		},
-		"documentId": {
-			"name": "documentId",
-			"in": "path",
-			"description": "Document Id",
-			"required": true,
-			"type": "string"
-		},
-		"subscriptionId": {
-			"name": "subscriptionId",
-			"in": "path",
-			"description": "Subscription Id",
-			"required": true,
-			"type": "string"
-		},
-		"limit": {
-			"name": "limit",
-			"in": "query",
-			"description": "Maximum size of API array to return.",
-			"default": 25,
-			"required": true,
-			"type": "integer",
-			"format": "int32"
-		},
-		"offset": {
-			"name": "offset",
-			"in": "query",
-			"description": "Starting point of the item list.",
-			"default": 0,
-			"required": true,
-			"type": "integer",
-			"format": "int32"
-		},
-		"userId": {
-			"name": "userId",
-			"in": "path",
-			"description": "User Id",
-			"required": true,
-			"type": "string",
-		},
-		"Accept": {
-			"name": "Accept",
-			"in": "header",
-			"description": "Media types for the response. Should denote XML or JSON, default is JSON.",
-			"type": "string"
-		},
-		"Content-Type": {
-			"name": "Content-Type",
-			"in": "header",
-			"description": "Media type of the entity in the request body. Should denote XML or JSON, default is JSON.",
-			"type": "string"
-		},
-		"If-None-Match": {
-			"name": "If-None-Match",
-			"in": "header",
-			"description": "Validator for conditional requests; based on ETag.",
-			"type": "string"
-		},
-		"If-Modified-Since": {
-			"name": "If-Modified-Since",
-			"in": "header",
-			"description": "Validator for conditional requests; based on Last Modified header.",
-			"type": "string"
-		},
-		"If-Match": {
-			"name": "If-Match",
-			"in": "header",
-			"description": "Validator for conditional requests; based on ETag.",
-			"type": "string"
-		},
-		"If-Unmodified-Since": {
-			"name": "If-Unmodified-Since",
-			"in": "header",
-			"description": "Validator for conditional requests; based on Last Modified header.",
-			"type": "string"
-		}
-	},
-	"definitions": {
-		"AccessToken": {
-			"title": "OAuth2 access token",
-			"required": [
-				"token",
-				"refreshToken",
-				"expiresIn"
-			],
-			"properties": {
-				"token": {
-					"type": "string"
-				},
-				"refreshToken": {
-					"type": "string"
-				},
-				"expiresIn": {
-					"type": "integer",
-					"format": "int32"
-				}
-			}
-		},
-		"AuthenticatedUser": {
-			"title": "Authenticated user object",
-			"required": [
-				"userId",
-				"accessToken"
-			],
-			"properties": {
-				"userId": {
-					"type": "string"
-				},
-				"userName": {
-					"type": "string"
-				},
-				"accessToken": {
-					"$ref": "#/definitions/AccessToken"
-				}
-			}
-		},
-		"API": {
-			"title": "API object",
-			"required": [
-				"name",
-				"context",
-				"version"
-			],
-			"properties": {
-				"name": {
-					"type": "string"
-				},
-				"description": {
-					"type": "string"
-				},
-				"imageUrl": {
-					"type": "string"
-				},
-				"context": {
-					"type": "string"
-				},
-				"version": {
-					"type": "string"
-				},
-				"provider": {
-					"type": "string"
-				},
-				"swagger": {
-					"type": "string"
-				},
-				"status": {
-					"type": "string"
-				}
-			}
-		},
-		"Application": {
-			"title": "Application",
-			"required": [
-				"applicationId"
-			],
-			"properties": {
-				"id": {
-					"type": "string"
-				},
-				"name": {
-					"type": "string"
-				},
-				"description": {
-					"type": "string"
-				},
-				"status": {
-					"type": "string"
-				},
-				"throttlingTier": {
-					"type": "string"
-				},
-				"callbackUrl": {
-					"type": "string"
-				},
-				"consumerKey": {
-					"type": "string"
-				},
-				"consumerSecret": {
-					"type": "string"
-				},
-				"accessToken": {
-					"type": "string"
-				},
-				"subscriptions": {
-					"type": "array",
-					"items": {
-						"$ref": "#/definitions/Subscription"
-					}
-				}
-			}
-		},
-		"Credentials": {
-			"title": "User credentials",
-			"required": [
-				"userName",
-				"credential"
-			],
-			"properties": {
-				"userName": {
-					"type": "string"
-				},
-				"credential": {
-					"type": "string"
-			   }
-			}
-		},
-		"Document": {
-			"title": "Document",
-			"required": [
-				"id"
-			],
-			"properties": {
-				"id": {
-					"type": "integer",
-					"format": "int32"
-				},
-				"name": {
-					"type": "string"
-				},
-				"type": {
-					"type": "array",
-					"items": {
-						"type": "string",
-						"enum": [
-							"file",
-							"inline",
-							"url"
-						]
-					}
-				},
-				"summary": {
-					"type": "string"
-				},
-				"content": {
-					"type": "string"
-				},
-				"url": {
-					"type": "string"
-				}
-			}
-		},
-		"Subscription": {
-			"title": "Subscription",
-			"required": [
-				"id"
-			],
-			"properties": {
-				"id": {
-					"type": "integer",
-					"format": "int32"
-				},
-				"application": {
-					"$ref": "#/definitions/Application"
-				},
-				"api": {
-					"$ref": "#/definitions/API"
-				},
-				"tier": {
-					"type": "string"
-				},
-				"status": {
-					"type": "string"
-				}
-			}
-		},
-		"Tier": {
-			"title": "Tier",
-			"required": [
-				"name"
-			],
-			"properties": {
-				"name": {
-					"type": "string"
-				},
-				"rate": {
-					"type": "string"
-				},
-				"roles": {
-					"type": "string"
-				}
-			}
-		},
-		"Error": {
-			"title": "Error object returned with 4XX HTTP status",
-			"required": [
-				"code",
-				"message"
-			],
-			"properties": {
-				"code": {
-					"type": "integer",
-					"format": "int64"
-				},
-				"message": {
-					"type": "string",
-					"description": "Error message."
-				},
-				"description": {
-					"type": "string",
-					"description": "A detail description about the error message."
-				},
-				"moreInfo": {
-					"type": "string",
-					"description": "Preferably an url with more details about the error."
-				},
-				"items": {
-					"type": "array",
-					"description": "If there are more than one error list them out. Ex. list out validation errors by each field.",
-					"items": {
-						"$ref": "#/definitions/ErrorListItem"
-					}
-				}
-			}
-		},
-		"ErrorListItem": {
-			"title": "Description of individual errors that may have occored during a request.",
-			"required": [
-				"code",
-				"message"
-			],
-			"properties": {
-				"code": {
-					"type": "integer",
-					"format": "int64"
-				},
-				"message": {
-					"type": "string",
-					"description": "Description about individual errors occored"
-				}
-			}
-		}
-	}
+    "swagger": "2.0",
+    "info": {
+        "version": "0.9.0",
+        "title": "Västtrafik REST API for WSO2 API Manager",
+        "description": "This document describe a ** RESTFul API ** for WSO2 **API Manager**.\n\n\nYou can find the source of this API definition at [here](https://github.com/vasttrafik/wso2-apim-developer-portal-api). It was written with [swagger 2](http://swagger.io/).\n",
+        "contact": {
+            "name": "Västtrafik",
+            "url": "https://developer.vasttrafik.se",
+            "email": "api@vasttrafik.se"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        }
+    },
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "schemes": [
+        "https"
+    ],
+    "paths": {
+        "/apis": {
+            "get": {
+                "description": "Get a list of available APIs qualifying under a given search condition.",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/limit"
+                    },
+                    {
+                        "$ref": "#/parameters/offset"
+                    },
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "** Search condition **.\n\n\nIf no advanced attribute modifier is found search will match the given query string against API Name.\n\n\nYou can search in attributes by using **\"attribute:\"**modifier.\n\n\nEg. \"provider:WSO2\" will match if the API provider is wso2. Matching is case-insensitive.\n\n\nSupported attribute modifiers are [ **name, version, context, status, description, document, provider** ]\n\n\nDocument is matched against all properties of all documents for all APIs.\n",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/Accept"
+                    },
+                    {
+                        "$ref": "#/parameters/If-None-Match"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK. List of APIs is returned.",
+                        "schema": {
+                            "title": "APIList",
+                            "type": "object",
+                            "properties": {
+                                "count": {
+                                    "type": "string"
+                                },
+                                "next": {
+                                    "type": "string",
+                                    "description": "Link for next page. Undefined if no next page."
+                                },
+                                "previous": {
+                                    "type": "string",
+                                    "description": "Link for previous page. Undefined if no previous page."
+                                },
+                                "list": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/API"
+                                    }
+                                }
+                            }
+                        },
+                        "headers": {
+                            "Content-Type": {
+                                "description": "The content type of the body.",
+                                "type": "string"
+                            },
+                            "ETag": {
+                                "description": "Entity Tag of the response resource. Used by caches, or in conditional requests.",
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "304": {
+                        "description": "Not Modified. Empty body because the client has already the latest version of the requested resource."
+                    },
+                    "401": {
+                        "description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable. The requested media type is not supported",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/apis/{apiId}": {
+            "parameters": [
+                {
+                    "$ref": "#/parameters/apiId"
+                }
+            ],
+            "get": {
+                "description": "Get details of an API",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/Accept"
+                    },
+                    {
+                        "$ref": "#/parameters/If-None-Match"
+                    },
+                    {
+                        "$ref": "#/parameters/If-Modified-Since"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK Requested API will be returned",
+                        "headers": {
+                            "Content-Type": {
+                                "description": "The content type of the body.",
+                                "type": "string"
+                            },
+                            "ETag": {
+                                "description": "Entity Tag of the response resource. Used by caches, or in conditional requests.",
+                                "type": "string"
+                            },
+                            "Last-Modified": {
+                                "description": "Date and time the resource has been modifed the last time. Used by caches, or in conditional reuquests.",
+                                "type": "string"
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/definitions/API"
+                        }
+                    },
+                    "304": {
+                        "description": "Not Modified. Empty body because the client has already the latest version of the requested resource."
+                    },
+                    "401": {
+                        "description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found. Requested API does not exist.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable. The requested media type is not supported",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/apis/{apiId}/documents": {
+            "get": {
+                "description": "Get a list of documents belonging to an API",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/limit"
+                    },
+                    {
+                        "$ref": "#/parameters/offset"
+                    },
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "** Search condition **.\n\nIf no advanced attribute modifier is found search will match the given query string against document Name.\n\nYou can search in attributes by using **\"attribute:\"**modifier.\n\nEg. \"type:FILE\" will match if the document type is file. Matching is case-insensitive. \n\nSupported attribute modifiers are [ **name, type, summary** ]\n",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/Accept"
+                    },
+                    {
+                        "$ref": "#/parameters/If-None-Match"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK Document list is returned.",
+                        "schema": {
+                            "title": "DocumentList",
+                            "type": "object",
+                            "properties": {
+                                "count": {
+                                    "type": "string"
+                                },
+                                "next": {
+                                    "type": "string",
+                                    "description": "Link for next page. Undefined if no next page."
+                                },
+                                "previous": {
+                                    "type": "string",
+                                    "description": "Link for previous page. Undefined if no previous page."
+                                },
+                                "list": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Document"
+                                    }
+                                }
+                            }
+                        },
+                        "headers": {
+                            "Content-Type": {
+                                "description": "The content type of the body.",
+                                "type": "string"
+                            },
+                            "ETag": {
+                                "description": "Entity Tag of the response resource. Used by caches, or in conditional requests.",
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "304": {
+                        "description": "Not Modified. Empty body because the client has already the latest version of the requested resource."
+                    },
+                    "401": {
+                        "description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found. Requested API does not exist.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable. The requested media type is not supported",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/parameters/apiId"
+                }
+            ]
+        },
+        "/apis/{apiId}/documents/{documentId}": {
+            "get": {
+                "description": "Get the document details of an API",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/Accept"
+                    },
+                    {
+                        "$ref": "#/parameters/If-None-Match"
+                    },
+                    {
+                        "$ref": "#/parameters/If-Modified-Since"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK Document returned.",
+                        "schema": {
+                            "$ref": "#/definitions/Document"
+                        },
+                        "headers": {
+                            "Content-Type": {
+                                "description": "The content type of the body.",
+                                "type": "string"
+                            },
+                            "ETag": {
+                                "description": "Entity Tag of the response resource. Used by caches, or in conditional requests.",
+                                "type": "string"
+                            },
+                            "Last-Modified": {
+                                "description": "Date and time the resource has been modifed the last time. Used by caches, or in conditional reuquests.",
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "304": {
+                        "description": "Not Modified. Empty body because the client has already the latest version of the requested resource."
+                    },
+                    "401": {
+                        "description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found. Requested Document does not exist.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable. The requested media type is not supported",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/parameters/apiId"
+                },
+                {
+                    "$ref": "#/parameters/documentId"
+                }
+            ]
+        },
+        "/apis/{apiId}/documents/{documentId}/content": {
+            "get": {
+                "description": "Get the document content",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/Accept"
+                    },
+                    {
+                        "$ref": "#/parameters/If-None-Match"
+                    },
+                    {
+                        "$ref": "#/parameters/If-Modified-Since"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK Document content returned.",
+                        "headers": {
+                            "Content-Type": {
+                                "description": "The content type of the body.",
+                                "type": "string"
+                            },
+                            "ETag": {
+                                "description": "Entity Tag of the response resource. Used by caches, or in conditional requests.",
+                                "type": "string"
+                            },
+                            "Last-Modified": {
+                                "description": "Date and time the resource has been modifed the last time. Used by caches, or in conditional reuquests.",
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "304": {
+                        "description": "Not Modified. Empty body because the client has already the latest version of the requested resource."
+                    },
+                    "401": {
+                        "description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found. Requested Document does not exist.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable. The requested media type is not supported",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/parameters/apiId"
+                },
+                {
+                    "$ref": "#/parameters/documentId"
+                }
+            ]
+        },
+        "/apis/{apiId}/image": {
+            "parameters": [
+                {
+                    "$ref": "#/parameters/apiId"
+                }
+            ],
+            "get": {
+                "description": "Get thumbnail image for the given API",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/Accept"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK Requested resource will be returned",
+                        "headers": {
+                            "Content-Type": {
+                                "description": "The content type of the body.",
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found. Requested resource does not exist.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable. The requested media type is not supported",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/apis/{apiId}/swagger": {
+            "parameters": [
+                {
+                    "$ref": "#/parameters/apiId"
+                }
+            ],
+            "get": {
+                "description": "Get swagger for the given API",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/Accept"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK Requested resource will be returned",
+                        "headers": {
+                            "Content-Type": {
+                                "description": "The content type of the body.",
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found. Requested resource does not exist.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable. The requested media type is not supported",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/apis/{apiId}/swagger/{resourceName}": {
+            "parameters": [
+                {
+                    "$ref": "#/parameters/apiId"
+                },
+                {
+                    "name": "resourceName",
+                    "in": "path",
+                    "description": "WSO2 resource name",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "description": "Get swagger details for the given API endpoint",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/Accept"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK Requested resource will be returned",
+                        "headers": {
+                            "Content-Type": {
+                                "description": "The content type of the body.",
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found. Requested resource does not exist.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable. The requested media type is not supported",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/applications": {
+            "get": {
+                "description": "Get a list of Applications created. For subscribers, the list will be restricted by ownership.",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/limit"
+                    },
+                    {
+                        "$ref": "#/parameters/offset"
+                    },
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "** Search condition **.\n\nIf no advanced attribute modifier is found search will match the given query string against application Name.\n\nYou can search in attributes by using **\"attribute:\"**modifier.\n\nEg. \"status:ACTIVE\" will match if the application status is active. Matching is case-insensitive. \n\nSupported attribute modifiers are [ **name, tier, status, description** ]\n",
+                        "type": "string"
+                    },
+                    {
+                        "$ref": "#/parameters/Accept"
+                    },
+                    {
+                        "$ref": "#/parameters/If-None-Match"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK Application list returned.",
+                        "schema": {
+                            "title": "ApplicationList",
+                            "type": "object",
+                            "properties": {
+                                "count": {
+                                    "type": "string"
+                                },
+                                "next": {
+                                    "type": "string",
+                                    "description": "Link for next page. Undefined if no next page."
+                                },
+                                "previous": {
+                                    "type": "string",
+                                    "description": "Link for previous page. Undefined if no previous page."
+                                },
+                                "list": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Application"
+                                    }
+                                }
+                            }
+                        },
+                        "headers": {
+                            "Content-Type": {
+                                "description": "The content type of the body.",
+                                "type": "string"
+                            },
+                            "ETag": {
+                                "description": "Entity Tag of the response resource. Used by caches, or in conditional requests.",
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "304": {
+                        "description": "Not Modified. Empty body because the client has already the latest version of the requested resource."
+                    },
+                    "400": {
+                        "description": "Bad Request. Invalid request or validation error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable. The requested media type is not supported",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new Application",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Application object that needs to be added",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Application"
+                        }
+                    },
+                    {
+                        "$ref": "#/parameters/Content-Type"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created. Successful response with the newly created object as entity in the body.",
+                        "schema": {
+                            "$ref": "#/definitions/Application"
+                        },
+                        "headers": {
+                            "Content-Type": {
+                                "description": "The content type of the body.",
+                                "type": "string"
+                            },
+                            "ETag": {
+                                "description": "Entity Tag of the response resource. Used by caches, or in conditional request",
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request. Invalid request or validation error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported media type",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/applications/{applicationId}": {
+            "get": {
+                "description": "Get Application details",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/Accept"
+                    },
+                    {
+                        "$ref": "#/parameters/If-None-Match"
+                    },
+                    {
+                        "$ref": "#/parameters/If-Modified-Since"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK Application returned.",
+                        "schema": {
+                            "$ref": "#/definitions/Application"
+                        },
+                        "headers": {
+                            "Content-Type": {
+                                "description": "The content type of the body.",
+                                "type": "string"
+                            },
+                            "ETag": {
+                                "description": "Entity Tag of the response resource. Used by caches, or in conditional requests.",
+                                "type": "string"
+                            },
+                            "Last-Modified": {
+                                "description": "Date and time the resource has been modifed the last time. Used by caches, or in conditional reuquests.",
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "304": {
+                        "description": "Not Modified. Empty body because the client has already the latest version of the requested resource."
+                    },
+                    "401": {
+                        "description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Requested Application does not exist.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable. The requested media type is not supported",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update application details",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Document object that needs to be added",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Application"
+                        }
+                    },
+                    {
+                        "$ref": "#/parameters/Content-Type"
+                    },
+                    {
+                        "$ref": "#/parameters/If-Match"
+                    },
+                    {
+                        "$ref": "#/parameters/If-Unmodified-Since"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK Application updated.",
+                        "schema": {
+                            "$ref": "#/definitions/Application"
+                        },
+                        "headers": {
+                            "Content-Type": {
+                                "description": "The content type of the body.",
+                                "type": "string"
+                            },
+                            "ETag": {
+                                "description": "Entity Tag of the response resource. Used by caches, or in conditional request",
+                                "type": "string"
+                            },
+                            "Last-Modified": {
+                                "description": "Date and time the resource has been modifed the last time. Used by caches, or in conditional requests.",
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request. Invalid request or validation error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found. The resource to be updated does not exist.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "412": {
+                        "description": "Precondition Failed. The request has not been performed because one of the preconditions is not met.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Remove and application",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/If-Match"
+                    },
+                    {
+                        "$ref": "#/parameters/If-Unmodified-Since"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK. Resource successfully deleted."
+                    },
+                    "401": {
+                        "description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found. Resource to be deleted does not exist.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "412": {
+                        "description": "Precondition Failed. The request has not been performed because one of the preconditions is not met.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/parameters/applicationId"
+                }
+            ]
+        },
+        "/applications/{applicationId}/tokens": {
+            "post": {
+                "description": "(Re)Generates an application access token",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "validityTime",
+                        "description": "Validity time in seconds.",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "$ref": "#/parameters/Content-Type"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created. Successful response with the newly created token object as entity in the body.",
+                        "schema": {
+                            "$ref": "#/definitions/Application"
+                        },
+                        "headers": {
+                            "Content-Type": {
+                                "description": "The content type of the body.",
+                                "type": "string"
+                            },
+                            "ETag": {
+                                "description": "Entity Tag of the response resource. Used by caches, or in conditional request",
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request. Invalid request or validation error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported media type",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/parameters/applicationId"
+                }
+            ]
+        },
+        "/messages": {
+            "post": {
+                "description": "Creates a new email or internally managed message",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Document object that needs to be added",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Message"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created. Successful response"
+                    },
+                    "400": {
+                        "description": "Bad Request. Invalid request or validation error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported media type",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/security": {
+            "post": {
+                "description": "Performs either a login, a logout or refreshes the access token.",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "action",
+                        "description": "The action to perform",
+                        "required": true,
+                        "type": "string",
+                        "enum": [
+                            "login",
+                            "logout",
+                            "refreshToken"
+                        ]
+                    },
+                    {
+                        "in": "query",
+                        "name": "refreshToken",
+                        "description": "The refresh token, if trying to refresh the access token",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Credential object, if trying to login.",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Credentials"
+                        }
+                    },
+                    {
+                        "$ref": "#/parameters/Content-Type"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK. Successful response with the refreshed access token as part of the authenticated user object.",
+                        "schema": {
+                            "$ref": "#/definitions/AuthenticatedUser"
+                        },
+                        "headers": {
+                            "Content-Type": {
+                                "description": "The content type of the body.",
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Authorized. Successful response with the newly authenticated user as entity in the body.",
+                        "schema": {
+                            "$ref": "#/definitions/AuthenticatedUser"
+                        },
+                        "headers": {
+                            "Content-Type": {
+                                "description": "The content type of the body.",
+                                "type": "string"
+                            },
+                            "ETag": {
+                                "description": "Entity Tag of the response resource. Used by caches, or in conditional request",
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "OK. Successful logout."
+                    },
+                    "400": {
+                        "description": "Bad Request. Invalid request or validation error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "415": {
+                        "description": "Unsupported media type",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/subscriptions": {
+            "get": {
+                "description": "Get subscription list. The list returned will be restricted to those of the logged in user.",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/limit"
+                    },
+                    {
+                        "$ref": "#/parameters/offset"
+                    },
+                    {
+                        "$ref": "#/parameters/Accept"
+                    },
+                    {
+                        "$ref": "#/parameters/If-None-Match"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK Subscription list returned.",
+                        "schema": {
+                            "title": "SubscriptionList",
+                            "type": "object",
+                            "properties": {
+                                "count": {
+                                    "type": "string"
+                                },
+                                "next": {
+                                    "type": "string",
+                                    "description": "Link for next page. Undefined if no next page."
+                                },
+                                "previous": {
+                                    "type": "string",
+                                    "description": "Link for previous page. Undefined if no previous page."
+                                },
+                                "list": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Subscription"
+                                    }
+                                }
+                            }
+                        },
+                        "headers": {
+                            "Content-Type": {
+                                "description": "The content type of the body.",
+                                "type": "string"
+                            },
+                            "ETag": {
+                                "description": "Entity Tag of the response resource. Used by caches, or in conditional requests.",
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "304": {
+                        "description": "Not Modified. Empty body because the client has already the latest version of the requested resource."
+                    },
+                    "401": {
+                        "description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable. The requested media type is not supported",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Add a new subscription",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "API object that needs to be added",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Subscription"
+                        }
+                    },
+                    {
+                        "$ref": "#/parameters/Content-Type"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created. Successful response with the newly created object as entity in the body.",
+                        "schema": {
+                            "$ref": "#/definitions/Subscription"
+                        },
+                        "headers": {
+                            "Content-Type": {
+                                "description": "The content type of the body.",
+                                "type": "string"
+                            },
+                            "ETag": {
+                                "description": "Entity Tag of the response resource. Used by caches, or in conditional request",
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request. Invalid request or validation error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/subscriptions/{subscriptionId}": {
+            "get": {
+                "description": "Get subscription details",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/Accept"
+                    },
+                    {
+                        "$ref": "#/parameters/If-None-Match"
+                    },
+                    {
+                        "$ref": "#/parameters/If-Modified-Since"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK Subscription returned",
+                        "schema": {
+                            "$ref": "#/definitions/Subscription"
+                        },
+                        "headers": {
+                            "Content-Type": {
+                                "description": "The content type of the body.",
+                                "type": "string"
+                            },
+                            "ETag": {
+                                "description": "Entity Tag of the response resource. Used by caches, or in conditional requests.",
+                                "type": "string"
+                            },
+                            "Last-Modified": {
+                                "description": "Date and time the resource has been modifed the last time. Used by caches, or in conditional reuquests.",
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "304": {
+                        "description": "Not Modified. Empty body because the client has already the latest version of the requested resource."
+                    },
+                    "401": {
+                        "description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found. Requested Subscription does not exist.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable. The requested media type is not supported",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Remove subscription",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/If-Match"
+                    },
+                    {
+                        "$ref": "#/parameters/If-Unmodified-Since"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK. Resource successfully deleted."
+                    },
+                    "401": {
+                        "description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found. Resource to be deleted does not exist.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "412": {
+                        "description": "Precondition Failed. The request has not been performed because one of the preconditions is not met.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/parameters/subscriptionId"
+                }
+            ]
+        }
+    },
+    "parameters": {
+        "apiId": {
+            "name": "apiId",
+            "in": "path",
+            "description": "**API ID** consisting name version and provider of the API. \nShould be formated as **name--version_provider**\n",
+            "required": true,
+            "type": "string"
+        },
+        "applicationId": {
+            "name": "applicationId",
+            "in": "path",
+            "description": "Application Id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+        },
+        "documentId": {
+            "name": "documentId",
+            "in": "path",
+            "description": "Document Id",
+            "required": true,
+            "type": "string"
+        },
+        "subscriptionId": {
+            "name": "subscriptionId",
+            "in": "path",
+            "description": "Subscription Id",
+            "required": true,
+            "type": "string"
+        },
+        "limit": {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum size of API array to return.",
+            "default": 25,
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+        },
+        "offset": {
+            "name": "offset",
+            "in": "query",
+            "description": "Starting point of the item list.",
+            "default": 0,
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+        },
+        "Accept": {
+            "name": "Accept",
+            "in": "header",
+            "description": "Media types for the response. Should denote XML or JSON, default is JSON.",
+            "type": "string"
+        },
+        "Content-Type": {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "Media type of the entity in the request body. Should denote XML or JSON, default is JSON.",
+            "type": "string"
+        },
+        "If-None-Match": {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "Validator for conditional requests; based on ETag.",
+            "type": "string"
+        },
+        "If-Modified-Since": {
+            "name": "If-Modified-Since",
+            "in": "header",
+            "description": "Validator for conditional requests; based on Last Modified header.",
+            "type": "string"
+        },
+        "If-Match": {
+            "name": "If-Match",
+            "in": "header",
+            "description": "Validator for conditional requests; based on ETag.",
+            "type": "string"
+        },
+        "If-Unmodified-Since": {
+            "name": "If-Unmodified-Since",
+            "in": "header",
+            "description": "Validator for conditional requests; based on Last Modified header.",
+            "type": "string"
+        }
+    },
+    "definitions": {
+        "AccessToken": {
+            "title": "OAuth2 access token",
+            "required": [
+                "token",
+                "refreshToken",
+                "expiresIn"
+            ],
+            "properties": {
+                "token": {
+                    "type": "string"
+                },
+                "refreshToken": {
+                    "type": "string"
+                },
+                "expiresIn": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        },
+        "AuthenticatedUser": {
+            "title": "Authenticated user object",
+            "required": [
+                "userId",
+                "accessToken"
+            ],
+            "properties": {
+                "userId": {
+                    "type": "string"
+                },
+                "userName": {
+                    "type": "string"
+                },
+                "accessToken": {
+                    "$ref": "#/definitions/AccessToken"
+                }
+            }
+        },
+        "API": {
+            "title": "API object",
+            "required": [
+                "name",
+                "context",
+                "version"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "imageUrl": {
+                    "type": "string"
+                },
+                "context": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                },
+                "provider": {
+                    "type": "string"
+                },
+                "swagger": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "Application": {
+            "title": "Application",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "throttlingTier": {
+                    "type": "string"
+                },
+                "callbackUrl": {
+                    "type": "string"
+                },
+                "consumerKey": {
+                    "type": "string"
+                },
+                "consumerSecret": {
+                    "type": "string"
+                },
+                "accessToken": {
+                    "type": "string"
+                },
+                "subscriptions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Subscription"
+                    }
+                }
+            }
+        },
+        "Credentials": {
+            "title": "User credentials",
+            "required": [
+                "userName",
+                "credential"
+            ],
+            "properties": {
+                "userName": {
+                    "type": "string"
+                },
+                "credential": {
+                    "type": "string"
+                }
+            }
+        },
+        "Document": {
+            "title": "Document",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "file",
+                            "inline",
+                            "url"
+                        ]
+                    }
+                },
+                "summary": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "Message": {
+            "title": "An email or internally managed message",
+            "required": [
+                "from",
+                "to",
+                "subject",
+                "body"
+            ],
+            "properties": {
+                "messageType": {
+                    "description": "Message type",
+                    "type": "string",
+                    "enum": [
+                        "EMAIL",
+                        "INTERNAL"
+                    ]
+                },
+                "from": {
+                    "description": "The sender of the message, which can be email or username",
+                    "type": "string"
+                },
+                "to": {
+                    "description": "The receipients of the message. Semicolon separated list of emails or usernames",
+                    "type": "string"
+                },
+                "subject": {
+                    "description": "The message subject",
+                    "type": "string"
+                },
+                "body": {
+                    "description": "The message body",
+                    "type": "string"
+                },
+                "contentType": {
+                    "description": "The message body content type",
+                    "type": "string",
+                    "enum": [
+                        "text/plan",
+                        "text/html"
+                    ]
+                },
+                "dateTime": {
+                    "description": "Date and time when the message was created",
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "Subscription": {
+            "title": "Subscription",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "application": {
+                    "$ref": "#/definitions/Application"
+                },
+                "api": {
+                    "$ref": "#/definitions/API"
+                },
+                "tier": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "Error": {
+            "title": "Error object returned with 4XX HTTP status",
+            "required": [
+                "code",
+                "message"
+            ],
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "message": {
+                    "type": "string",
+                    "description": "Error message."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "A detail description about the error message."
+                },
+                "moreInfo": {
+                    "type": "string",
+                    "description": "Preferably an url with more details about the error."
+                },
+                "items": {
+                    "type": "array",
+                    "description": "If there are more than one error list them out. Ex. list out validation errors by each field.",
+                    "items": {
+                        "$ref": "#/definitions/ErrorListItem"
+                    }
+                }
+            }
+        },
+        "ErrorListItem": {
+            "title": "Description of individual errors that may have occored during a request.",
+            "required": [
+                "code",
+                "message"
+            ],
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "message": {
+                    "type": "string",
+                    "description": "Description about individual errors occored"
+                }
+            }
+        }
+    }
 }
