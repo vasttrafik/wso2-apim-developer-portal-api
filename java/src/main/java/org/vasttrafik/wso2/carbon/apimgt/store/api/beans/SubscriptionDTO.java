@@ -13,13 +13,14 @@ public final class SubscriptionDTO {
     public String prodKey;
     public String prodConsumerKey;
     public String prodConsumerSecret;
-    public String prodRegenarateOption;
+    public Boolean prodRegenarateOption;
     public String prodAuthorizedDomains;
     public Integer prodValidityTime;
     public String sandboxKey;
     public String sandboxConsumerKey;
     public String sandboxConsumerSecret;
-    public String sandRegenarateOption;
+    public Boolean sandRegenarateOption;
+    public String sandboxKeyState;
     public String sandboxAuthorizedDomains;
     public Integer sandValidityTime;
     public List<SubscriptionsItemDTO> subscriptions;
