@@ -1,6 +1,5 @@
 package org.vasttrafik.wso2.carbon.apimgt.portal.api.resources;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.AccessToken;
@@ -154,7 +153,7 @@ public class Security implements ResourceBundleAware {
         } catch (final NotAuthorizedException exception) {
             throw exception;
         } catch (final Exception exception) {
-            throw new NotAuthorizedException(ExceptionUtils.getStackTrace(exception));
+            throw new NotAuthorizedException(ResponseUtils.notAuthorizedError(exception));
         }
     }
 
@@ -166,7 +165,7 @@ public class Security implements ResourceBundleAware {
             new TokenClient().revoke(oauthData.getToken(), oauthData.getKey(), oauthData.getSecret());
             return Response.noContent().build();
         } catch (final Exception exception) {
-            throw new NotAuthorizedException(ExceptionUtils.getStackTrace(exception));
+            throw new NotAuthorizedException(ResponseUtils.notAuthorizedError(exception));
         }
     }
 
