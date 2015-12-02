@@ -1,7 +1,5 @@
 package org.vasttrafik.wso2.carbon.apimgt.portal.api.resources;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.AccessToken;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.AuthenticatedUser;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.Credentials;
@@ -29,8 +27,6 @@ public class Security implements ResourceBundleAware {
 
     private static final String TOKEN_VALIDITY_TIME = "1800";
 
-    private static final Log LOGGER = LogFactory.getLog(Security.class);
-
     private class Session {
         private AccessToken accessToken;
         private OauthData oauthData;
@@ -46,8 +42,6 @@ public class Security implements ResourceBundleAware {
      * @return The username of the authorized user.
      */
     public static String validateToken(final String authorization) throws Exception {
-        LOGGER.info("SESSIONS: " + SESSIONS.keySet().toString());
-
         final String username = UserAdminUtils.validateToken(authorization);
         if (SESSIONS.containsKey(username)) {
             return username;
