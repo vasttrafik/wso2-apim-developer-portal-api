@@ -91,7 +91,7 @@ public class Security implements ResourceBundleAware {
             if (credentials == null || credentials.getUserName() == null || credentials.getCredential() == null) {
                 throw new BadRequestException(ResponseUtils.badRequest(resourceBundle, 2004L, new Object[][]{}));
             }
-            final String userName = credentials.getUserName();
+            final String userName = credentials.getUserName().toLowerCase();
             final String credential = credentials.getCredential();
 
             /**
