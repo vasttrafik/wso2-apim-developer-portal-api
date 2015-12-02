@@ -1,7 +1,7 @@
 {
 	"swagger": "2.0",
 	"info": {
-		"version": "0.9.0",
+		"version": "1.0.0",
 		"title": "Västtrafik REST API for WSO2 API Manager",
 		"description": "This document describe a ** RESTFul API ** for WSO2 **API Manager**.\n\nYou can find the source of this API definition at [here](https://github.com/vasttrafik/wso2-apim-developer-portal-api). It was written with [swagger 2](http://swagger.io/).\n",
 		"contact": {
