@@ -82,7 +82,7 @@
         </repository>
     </repositories>
     <build>
-        <finalName>portal</finalName>
+        <finalName>portal-api</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
