@@ -28,6 +28,8 @@ import javax.ws.rs.core.Response;
  */
 final class StoreClient implements ResourceBundleAware {
 
+    private static final String APPLICATION_FORM_URLENCODED_UTF8 = "application/x-www-form-urlencoded;charset=UTF-8";
+
     private static final WebTarget TARGET;
 
     static {
@@ -70,7 +72,7 @@ final class StoreClient implements ResourceBundleAware {
                 .param("validityTime", validityTime);
 
         return validateDTO(TARGET.path("subscription/subscription-add/ajax/subscription-add.jag")
-                .request().cookie(cookie).post(Entity.form(form), GenerateApplicationKeyDTO.class));
+                .request().cookie(cookie).post(Entity.entity(form, APPLICATION_FORM_URLENCODED_UTF8), GenerateApplicationKeyDTO.class));
     }
 
     /**
@@ -88,7 +90,7 @@ final class StoreClient implements ResourceBundleAware {
                 .param("validityTime", validityTime);
 
         return validateDTO(TARGET.path("subscription/subscription-add/ajax/subscription-add.jag")
-                .request().cookie(cookie).post(Entity.form(form), RefreshTokenDTO.class));
+                .request().cookie(cookie).post(Entity.entity(form, APPLICATION_FORM_URLENCODED_UTF8), RefreshTokenDTO.class));
     }
 
     /**
@@ -124,7 +126,7 @@ final class StoreClient implements ResourceBundleAware {
                 .param("callbackUrl", StringUtils.defaultString(callbackUrl));
 
         return validateDTO(TARGET.path("application/application-add/ajax/application-add.jag")
-                .request().cookie(cookie).post(Entity.form(form), StatusDTO.class));
+                .request().cookie(cookie).post(Entity.entity(form, APPLICATION_FORM_URLENCODED_UTF8), StatusDTO.class));
     }
 
     WrapperDTO updateApplication(final String name, final String newName, final String callbackUrl, final String description, final String tier) {
@@ -137,7 +139,7 @@ final class StoreClient implements ResourceBundleAware {
                 .param("tier", StringUtils.defaultString(tier, Constants.TIER_UNLIMITED));
 
         return validateDTO(TARGET.path("application/application-update/ajax/application-update.jag")
-                .request().cookie(cookie).post(Entity.form(form), WrapperDTO.class));
+                .request().cookie(cookie).post(Entity.entity(form, APPLICATION_FORM_URLENCODED_UTF8), WrapperDTO.class));
     }
 
     WrapperDTO removeApplication(final String name) {
@@ -146,7 +148,7 @@ final class StoreClient implements ResourceBundleAware {
                 .param("application", name);
 
         return validateDTO(TARGET.path("application/application-remove/ajax/application-remove.jag")
-                .request().cookie(cookie).post(Entity.form(form), WrapperDTO.class));
+                .request().cookie(cookie).post(Entity.entity(form, APPLICATION_FORM_URLENCODED_UTF8), WrapperDTO.class));
     }
 
     SubscriptionsDTO getAllSubscriptions() {
@@ -180,7 +182,7 @@ final class StoreClient implements ResourceBundleAware {
                 .param("applicationName", applicationName);
 
         return validateDTO(TARGET.path("subscription/subscription-add/ajax/subscription-add.jag")
-                .request().cookie(cookie).post(Entity.form(form), WrapperDTO.class));
+                .request().cookie(cookie).post(Entity.entity(form, APPLICATION_FORM_URLENCODED_UTF8), WrapperDTO.class));
     }
 
     /**
@@ -196,7 +198,7 @@ final class StoreClient implements ResourceBundleAware {
                 .param("applicationId", String.valueOf(applicationId));
 
         return validateDTO(TARGET.path("subscription/subscription-remove/ajax/subscription-remove.jag")
-                .request().cookie(cookie).post(Entity.form(form), WrapperDTO.class));
+                .request().cookie(cookie).post(Entity.entity(form, APPLICATION_FORM_URLENCODED_UTF8), WrapperDTO.class));
     }
 
 }
