@@ -73,7 +73,7 @@ public class Security implements ResourceBundleAware {
                 default:
                     throw new IllegalStateException();
             }
-        } catch (final BadRequestException | NotAuthorizedException | NotFoundException exception) {
+        } catch (final BadRequestException | NotAuthorizedException | NotFoundException | ForbiddenException exception) {
             throw exception;
         } catch (final Exception exception) {
             throw new InternalServerErrorException(exception);
@@ -87,6 +87,9 @@ public class Security implements ResourceBundleAware {
             }
             final String userName = credentials.getUserName().toLowerCase();
             final String credential = credentials.getCredential();
+			
+			if ("admin".equalsIgnoreCase(userName))
+				throw new ForbiddenException();
 
             /**
              * Check if the user is already logged in.
