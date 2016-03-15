@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Path("security")
 public class Security implements ResourceBundleAware {
 
-    private static final String TOKEN_VALIDITY_TIME = "1800";
+    private static final String TOKEN_VALIDITY_TIME = "3600";
 
     private class Session {
         private AccessToken accessToken;

@@ -1,6 +1,7 @@
 package org.vasttrafik.wso2.carbon.apimgt.portal.api.resources;
 
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.API;
+
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.Document;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.pagination.PaginatedList;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
@@ -23,6 +24,7 @@ import java.util.List;
 public class APIs implements ResourceBundleAware {
 
     static ProxyClient getProxyClient(final String authorization) throws Exception {
+    	
         if (authorization == null) {
             return new ProxyClient(ClientUtils.ADMIN_USER_NAME, ClientUtils.ADMIN_PASSWORD);
         } else {
