@@ -204,13 +204,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<configuration>
-					<outputDirectory>C:\Programs\Wso2\wso2am-1.8.0\repository\deployment\server\webapps\</outputDirectory>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 </project>
