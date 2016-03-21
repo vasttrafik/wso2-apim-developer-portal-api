@@ -980,29 +980,10 @@
                 }
             }
         },
-        "/security": {
+        "/authenticate": {
             "post": {
-                "description": "Performs either a login, a logout or refreshes the access token.",
+                "description": "Authenticates the user and issues a JWT token.",
                 "parameters": [
-                    {
-                        "in": "query",
-                        "name": "action",
-                        "description": "The action to perform",
-                        "required": true,
-                        "type": "string",
-                        "enum": [
-                            "login",
-                            "logout",
-                            "refreshToken"
-                        ]
-                    },
-                    {
-                        "in": "query",
-                        "name": "refreshToken",
-                        "description": "The refresh token, if trying to refresh the access token",
-                        "required": false,
-                        "type": "string"
-                    },
                     {
                         "in": "body",
                         "name": "body",
@@ -1017,18 +998,6 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK. Successful response with the refreshed access token as part of the authenticated user object.",
-                        "schema": {
-                            "$ref": "#/definitions/AuthenticatedUser"
-                        },
-                        "headers": {
-                            "Content-Type": {
-                                "description": "The content type of the body.",
-                                "type": "string"
-                            }
-                        }
-                    },
                     "201": {
                         "description": "Authorized. Successful response with the newly authenticated user as entity in the body.",
                         "schema": {
@@ -1045,9 +1014,6 @@
                             }
                         }
                     },
-                    "204": {
-                        "description": "OK. Successful logout."
-                    },
                     "400": {
                         "description": "Bad Request. Invalid request or validation error",
                         "schema": {
@@ -1055,7 +1021,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
+                        "description": "Unauthorized.",
                         "schema": {
                             "$ref": "#/definitions/Error"
                         }
@@ -1563,7 +1529,7 @@
             "required": [
                 "token",
                 "refreshToken",
-                "expiresIn"
+                "expires"
             ],
             "properties": {
                 "token": {
@@ -1572,9 +1538,9 @@
                 "refreshToken": {
                     "type": "string"
                 },
-                "expiresIn": {
+                "expires": {
                     "type": "integer",
-                    "format": "int32"
+                    "format": "int64"
                 }
             }
         },
@@ -1582,6 +1548,8 @@
             "title": "Authenticated user object",
             "required": [
                 "userId",
+				"userName",
+				"roles",
                 "accessToken"
             ],
             "properties": {
@@ -1591,6 +1559,12 @@
                 "userName": {
                     "type": "string"
                 },
+				"roles": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
                 "accessToken": {
                     "$ref": "#/definitions/AccessToken"
                 }
