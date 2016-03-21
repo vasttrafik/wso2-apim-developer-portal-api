@@ -4,7 +4,7 @@ import org.vasttrafik.wso2.carbon.apimgt.portal.api.annotations.Authorization;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.annotations.Status;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.Message;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.MailSender;
-import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
+//import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
 import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 
 import javax.ws.rs.*;
@@ -16,7 +16,7 @@ import javax.ws.rs.core.SecurityContext;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("messages")
-public class Messages implements ResourceBundleAware {
+public class Messages extends PortalResource {
 
 	@Context
     private SecurityContext securityContext;

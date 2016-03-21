@@ -6,7 +6,7 @@ import org.vasttrafik.wso2.carbon.apimgt.portal.api.annotations.Authorization;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.annotations.Status;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.Series;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.Statistic;
-import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
+//import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.StatisticsUtil;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.StatisticsUtil.Grouping;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.StatisticsUtil.Period;
@@ -28,7 +28,7 @@ import javax.ws.rs.core.SecurityContext;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("statistics")
-public class Statistics implements ResourceBundleAware {
+public class Statistics extends PortalResource {
 
 	private static Log logger = LogFactory.getLog(Statistics.class);
 
@@ -54,38 +54,36 @@ public class Statistics implements ResourceBundleAware {
 	public List<Statistic> getStatistics(@QueryParam("source") final Source source,
 			@QueryParam("period") @DefaultValue("week") final Period period,
 			@QueryParam("grouping") @DefaultValue("day") final Grouping grouping,
-			@QueryParam("type") final List<Type> type, @HeaderParam("Authorization") final String authorization) {
-
+			@QueryParam("type") final List<Type> type, 
+			@HeaderParam("X-JWT-Assertion") final String authorization) 
+	{
 		if (Source.apis.equals(source)) {
-
 			return getApiStatistics(type, period, grouping, "%", "%");
-
 		} else {
-
 			final String userName;
 
 			try {
-				userName = Security.validateToken(authorization);
+				authorize(authorization);
+				userName = getEndUserName();
+				//userName = Security.validateToken(authorization);
 			} catch (Exception e) {
 				throw new NotAuthorizedException(
 						ResponseUtils.notAuthorizedError(resourceBundle, 2003L, new Object[][] {}));
 			}
 			return getApplicationStatistics(type, userName, "%");
-
 		}
-
 	}
 
 	@Authorization
 	@Status(Status.OK)
 	@GET
 	@Path("{applicationName}")
-	public List<Statistic> getApplicationStatistics(@PathParam("applicationName") final String applicationName,
-			@QueryParam("type") final List<Type> type) {
-
+	public List<Statistic> getApplicationStatistics(
+			@PathParam("applicationName") final String applicationName,
+			@QueryParam("type") final List<Type> type) 
+	{
 		final String userName = securityContext.getUserPrincipal().getName();
 		return getApplicationStatistics(type, userName, applicationName);
-
 	}
 
 	@Status(Status.OK)
@@ -95,10 +93,9 @@ public class Statistics implements ResourceBundleAware {
 			@PathParam("apiVersion") final String apiVersion,
 			@QueryParam("period") @DefaultValue("week") final Period period,
 			@QueryParam("grouping") @DefaultValue("day") final Grouping grouping,
-			@QueryParam("type") final List<Type> type) {
-
+			@QueryParam("type") final List<Type> type)
+	{
 		return getApiStatistics(type, period, grouping, apiName, apiVersion);
-
 	}
 
 	private List<Statistic> getApiStatistics(List<Type> types, Period period, Grouping grouping, String apiName,

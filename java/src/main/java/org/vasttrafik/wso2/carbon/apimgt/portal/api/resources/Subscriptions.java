@@ -4,7 +4,8 @@ import org.vasttrafik.wso2.carbon.apimgt.portal.api.annotations.Authorization;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.annotations.Status;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.Subscription;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.pagination.PaginatedList;
-import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
+import org.vasttrafik.wso2.carbon.apimgt.portal.api.security.Security;
+//import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.clients.ProxyClient;
 import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 
@@ -12,6 +13,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
+
 import java.util.List;
 
 /**
@@ -21,7 +23,7 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("subscriptions")
-public class Subscriptions implements ResourceBundleAware {
+public class Subscriptions extends PortalResource {
 
     @Context
     private SecurityContext securityContext;

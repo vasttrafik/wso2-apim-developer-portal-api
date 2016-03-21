@@ -8,7 +8,7 @@ package org.vasttrafik.wso2.carbon.apimgt.portal.api.resources;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.API;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.Document;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.pagination.PaginatedList;
-import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
+//import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
 import org.vasttrafik.wso2.carbon.apimgt.store.api.clients.ProxyClient;
 import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 
@@ -17,13 +17,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+
 import java.util.List;
 
 /**
  * @author Daniel Oskarsson <daniel.oskarsson@gmail.com>
  */
 @Path("apis/{apiId}/documents")
-public class Documents implements ResourceBundleAware {
+public class Documents extends PortalResource {
 
     @Context
     private SecurityContext securityContext;
@@ -35,13 +36,14 @@ public class Documents implements ResourceBundleAware {
             @QueryParam("offset") @DefaultValue("0") final int offset,
             @QueryParam("limit") @DefaultValue("10") final int limit,
             @QueryParam("query") final String query,
-            @HeaderParam("Authorization") final String authorization,
+            @HeaderParam("X-JWT-Assertion") final String authorization,
             @HeaderParam("If-None-Match") final String ifNoneMatch
     ) {
         ResponseUtils.checkParameter(resourceBundle, "apiId", true, new String[]{}, apiId);
 
         try {
-            final ProxyClient client = APIs.getProxyClient(authorization);
+            //final ProxyClient client = APIs.getProxyClient(authorization);
+            final ProxyClient client = getProxyClient(authorization);
             final API api = client.getAPI(apiId);
             final List<Document> list = client.getDocuments(api, query);
             return new PaginatedList<>(this.getClass(), offset, limit, query, list, apiId);
@@ -58,7 +60,7 @@ public class Documents implements ResourceBundleAware {
     public Document getDocument(
             @PathParam("apiId") final String apiId,
             @PathParam("documentId") final String documentId,
-            @HeaderParam("Authorization") final String authorization,
+            @HeaderParam("X-JWT-Assertion") final String authorization,
             @HeaderParam("If-None-Match") final String ifNoneMatch,
             @HeaderParam("If-Modified-Since") final String ifModifiedSince
     ) {
@@ -66,7 +68,8 @@ public class Documents implements ResourceBundleAware {
         ResponseUtils.checkParameter(resourceBundle, "documentId", true, new String[]{}, documentId);
 
         try {
-            final ProxyClient client = APIs.getProxyClient(authorization);
+            //final ProxyClient client = APIs.getProxyClient(authorization);
+            final ProxyClient client = getProxyClient(authorization);
             final API api = client.getAPI(apiId);
             return client.getDocument(api, documentId);
         } catch (final BadRequestException | NotAuthorizedException | NotFoundException exception) {
@@ -81,7 +84,7 @@ public class Documents implements ResourceBundleAware {
     public Response getDocumentContent(
             @PathParam("apiId") final String apiId,
             @PathParam("documentId") final String documentId,
-            @HeaderParam("Authorization") final String authorization,
+            @HeaderParam("X-JWT-Assertion") final String authorization,
             @HeaderParam("If-None-Match") final String ifNoneMatch,
             @HeaderParam("If-Modified-Since") final String ifModifiedSince
     ) {
@@ -89,7 +92,8 @@ public class Documents implements ResourceBundleAware {
         ResponseUtils.checkParameter(resourceBundle, "documentId", true, new String[]{}, documentId);
 
         try {
-            final ProxyClient client = APIs.getProxyClient(authorization);
+            //final ProxyClient client = APIs.getProxyClient(authorization);
+            final ProxyClient client = getProxyClient(authorization);
             final API api = client.getAPI(apiId);
             final Document document = client.getDocument(api, documentId);
             return Response.ok(document.getContent()).build();
@@ -106,7 +110,7 @@ public class Documents implements ResourceBundleAware {
             @PathParam("apiId") final String apiId,
             @PathParam("documentId") final String documentId,
             @PathParam("fileName") final String fileName,
-            @HeaderParam("Authorization") final String authorization,
+            @HeaderParam("X-JWT-Assertion") final String authorization,
             @HeaderParam("If-None-Match") final String ifNoneMatch,
             @HeaderParam("If-Modified-Since") final String ifModifiedSince
     ) {
@@ -114,7 +118,8 @@ public class Documents implements ResourceBundleAware {
         ResponseUtils.checkParameter(resourceBundle, "documentId", true, new String[]{}, documentId);
 
         try {
-            final ProxyClient client = APIs.getProxyClient(authorization);
+            //final ProxyClient client = APIs.getProxyClient(authorization);
+            final ProxyClient client = getProxyClient(authorization);
             final API api = client.getAPI(apiId);
             final Document document = client.getDocument(api, documentId);
             return Response.ok(document.getContent())
