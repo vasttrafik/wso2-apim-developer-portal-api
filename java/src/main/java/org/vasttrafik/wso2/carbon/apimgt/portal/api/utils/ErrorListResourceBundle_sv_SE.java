@@ -26,6 +26,7 @@ public final class ErrorListResourceBundle_sv_SE extends AbstractErrorListResour
             {"1004","Felaktig token","Angiven token är felaktig. Var vänlig ange en korrekt token."},
             {"1005","Felaktig token","Angiven token tillhör en annan användare. Var vänlig ange en korrekt token."},
             {"1006","Felaktigt användarnamn/lösenord","Angivet användarnamn/lösenord felaktigt. Var vänlig försök igen."},
+            {"1007","Kontot är låst","Användarkontot är låst. Var vänlig kontakta supporten."},
             {"2000","Felaktigt attribut","Angivet attribut {0} felaktigt. Var vänlig ange ett korrekt attribut."},
             {"2001","Resursen hittades inte","Den angivna resursen {0} hittades inte."},
             {"2002","Store returnerade ett fel","Store returnerade ett fel {0}. Var vänlig försök igen lite senare."},
