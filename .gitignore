@@ -2,3 +2,6 @@
 java/developer-portal-api.iml
 .DS_Store
 java/target/
+java/.settings
+java/.classpath
+java/.project
