@@ -152,11 +152,7 @@ public class Security implements ResourceBundleAware {
     
     public static void login(final Credentials credentials) {
     	String userName = credentials.getUserName().toLowerCase();  
-        ProxyClient proxyClient = SESSIONS.get(userName);
-        
-        if (proxyClient == null) {
-            SESSIONS.put(userName, new ProxyClient(userName, credentials.getCredential()));
-        }
+        SESSIONS.put(userName, new ProxyClient(userName, credentials.getCredential()));
     }
 
     /*private Response logout(final String authorization) {
