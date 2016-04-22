@@ -29,7 +29,8 @@ public final class ProxyClient implements ResourceBundleAware {
     /// Security methods
 
     public OauthData getDefaultApplicationOauthData() {
-        final List<SubscriptionDTO> subscriptionDTOs = storeClient.getAllSubscriptions().subscriptions;
+        //final List<SubscriptionDTO> subscriptionDTOs = storeClient.getAllSubscriptions().subscriptions;
+        final List<SubscriptionDTO> subscriptionDTOs = storeClient.getAllSubscriptions().subscriptions.applications;
         for (final SubscriptionDTO subscriptionDTO : subscriptionDTOs) {
             if (Constants.DEFAULT_APPLICATION.equals(subscriptionDTO.name)) {
                 return OauthData.valueOf(subscriptionDTO);
@@ -139,7 +140,8 @@ public final class ProxyClient implements ResourceBundleAware {
 
         // Map of SubscriptionDTOs with Application/Subscription ID as key
         final Map<Integer, SubscriptionDTO> subscriptionDTOs = new HashMap<>();
-        for (final SubscriptionDTO subscriptionDTO : storeClient.getAllSubscriptions().subscriptions) {
+        //for (final SubscriptionDTO subscriptionDTO : storeClient.getAllSubscriptions().subscriptions) {
+        for (final SubscriptionDTO subscriptionDTO : storeClient.getAllSubscriptions().subscriptions.applications) {
             subscriptionDTOs.put(subscriptionDTO.id, subscriptionDTO);
         }
 

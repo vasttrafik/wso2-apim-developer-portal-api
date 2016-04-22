@@ -11,5 +11,6 @@ public final class SubscriptionByApplicationDTO {
     public String description;
     public String subscribedTier;
     public String status;
-
+    // Nya attribut
+    public String subStatus;
 }

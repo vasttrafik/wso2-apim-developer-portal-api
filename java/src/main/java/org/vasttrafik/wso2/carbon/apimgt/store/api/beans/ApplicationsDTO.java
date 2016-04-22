@@ -8,5 +8,4 @@ import java.util.List;
 public final class ApplicationsDTO extends WrapperDTO {
 
     public List<ApplicationDTO> applications;
-
 }

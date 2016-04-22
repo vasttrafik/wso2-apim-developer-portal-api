@@ -4,7 +4,7 @@
 
 	<groupId>org.vasttrafik.se</groupId>
 	<artifactId>vt-developer-portal-api</artifactId>
-	<version>1.0.2</version>
+	<version>1.1.0</version>
 	<modelVersion>4.0.0</modelVersion>
 	<packaging>war</packaging>
 	<name>Västtrafik Developer Portal API</name>
@@ -13,7 +13,10 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<jersey.version>2.22.1</jersey.version>
+		<carbon.version>4.4.3</carbon.version>
+	    <apimgt.version>5.0.3</apimgt.version>
+	    <identity.version>5.0.7</identity.version>
+	    <jersey.version>2.22</jersey.version>
 	</properties>
 	
 	<dependencies>
@@ -36,7 +39,7 @@
 		<dependency>
 			<groupId>org.vasttrafik.se.common</groupId>
 			<artifactId>vt-developer-portal-api-utils</artifactId>
-			<version>1.0.0</version>
+			<version>1.1.0</version>
 			<exclusions>
 			  <exclusion>
 			    <groupId>*</groupId>
@@ -72,7 +75,7 @@
 		<dependency>
 			<groupId>org.apache.axis2.wso2</groupId>
 			<artifactId>axis2</artifactId>
-			<version>1.6.1.wso2v4</version>
+			<version>1.6.1.wso2v16</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -87,9 +90,9 @@
 			<version>3.4</version>
 		</dependency>
 		<dependency>
-	      <groupId>commons-io</groupId>
+	      <groupId>commons-io.wso2</groupId>
 	      <artifactId>commons-io</artifactId>
-	      <version>2.4</version>
+	      <version>2.4.0.wso2v1</version>
         </dependency>
 		<dependency>
 			<groupId>javax.mail</groupId>
@@ -100,13 +103,13 @@
 		<dependency>
 			<groupId>org.wso2.carbon</groupId>
 			<artifactId>org.wso2.carbon.core</artifactId>
-			<version>4.2.0</version>
+			<version>${carbon.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.wso2.carbon</groupId>
-			<artifactId>org.wso2.carbon.identity.mgt</artifactId>
-			<version>4.2.2</version>
+			<groupId>org.wso2.carbon.identity</groupId>
+            <artifactId>org.wso2.carbon.identity.mgt</artifactId>
+            <version>${identity.version}</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

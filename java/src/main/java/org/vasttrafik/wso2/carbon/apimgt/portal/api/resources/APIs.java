@@ -144,8 +144,10 @@ public class APIs extends PortalResource {
 
         try {
             final API api = getProxyClient(authorization).getAPI(apiId);
-            final String pathFormat = "/_system/governance/apimgt/applicationdata/api-docs/%s-%s-%s/1.2/%s";
-            final String path = String.format(pathFormat, api.getName(), api.getVersion(), api.getProvider(), resourceName);
+            //final String pathFormat = "/_system/governance/apimgt/applicationdata/api-docs/%s-%s-%s/1.2/%s";
+			//final String path = String.format(pathFormat, api.getName(), api.getVersion(), api.getProvider(), resourceName);
+			final String pathFormat = "/_system/governance/apimgt/applicationdata/provider/%s/%s/%s/swagger.json";
+			final String path = String.format(pathFormat, api.getProvider(), api.getName(), api.getVersion());
 
             final Object content = RegistryUtils.getContent(path);
             return Response.ok(content).build();

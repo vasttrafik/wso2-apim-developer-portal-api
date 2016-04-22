@@ -14,7 +14,7 @@ import org.vasttrafik.wso2.carbon.common.api.utils.AbstractErrorListResourceBund
 import org.vasttrafik.wso2.carbon.common.api.utils.ClientUtils;
 import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 
-// TO-DO: Refactor into impl package when resorces are refactored into using impl delegate classes
+// TO-DO: Refactor into impl package when resources are refactored into using impl delegate classes
 public class PortalResource extends AbstractApiServiceImpl implements ResourceBundleAware {
 
 	@Override

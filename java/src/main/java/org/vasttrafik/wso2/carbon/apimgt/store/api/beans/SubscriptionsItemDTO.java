@@ -24,5 +24,6 @@ public final class SubscriptionsItemDTO {
     public String sandAuthorizedDomains;
     public Integer sandValidityTime;
     public String hasMultipleEndpoints;
-
+    // Nytt attribut
+    public String businessOwner;
 }

@@ -11,5 +11,7 @@ public final class ApplicationDTO {
     public String callbackUrl;
     public String status;
     public String description;
-
+    // New attribute
+    public Integer apiCount;
+    public Integer groupId;
 }
