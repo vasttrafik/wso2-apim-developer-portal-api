@@ -7,5 +7,7 @@ public class WrapperDTO {
 
     public Boolean error;
     public String message;
+    // New object
+    public Object status;
 
 }

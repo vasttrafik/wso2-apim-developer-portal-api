@@ -13,6 +13,10 @@ public final class GenerateApplicationKeyDTO extends WrapperDTO {
         public Boolean enableRegenarate;
         public String accessallowdomains;
         public String keyState;
+        // New values
+        public String tokenDetails;
+        public String appDetails;
+        public Object tokenScope; // Array with scope Strings
     }
 
     public static class Data {

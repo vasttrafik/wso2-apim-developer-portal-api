@@ -142,7 +142,12 @@ public final class ProxyClient implements ResourceBundleAware {
         final Map<Integer, SubscriptionDTO> subscriptionDTOs = new HashMap<>();
         //for (final SubscriptionDTO subscriptionDTO : storeClient.getAllSubscriptions().subscriptions) {
         for (final SubscriptionDTO subscriptionDTO : storeClient.getAllSubscriptions().subscriptions.applications) {
-            subscriptionDTOs.put(subscriptionDTO.id, subscriptionDTO);
+            for (final SubscriptionDTO selectedSubscriptionDTO : storeClient.getAllSubscriptionsWithSelectedApp(subscriptionDTO.name).subscriptions.applications) {
+            	if((selectedSubscriptionDTO.id).equals(subscriptionDTO.id)) {
+            		subscriptionDTOs.put(selectedSubscriptionDTO.id, selectedSubscriptionDTO);
+            
+            	}
+            }
         }
 
         // Iterate through list of ApplicationDTOs and create what is needed
@@ -151,12 +156,13 @@ public final class ProxyClient implements ResourceBundleAware {
 
             // Get the corresponding SubscriptionDTO for the given application
             final SubscriptionDTO subscriptionDTO = subscriptionDTOs.get(applicationDTO.id);
-
+            
             // Create a list of subscriptions with application being set to null
             final List<Subscription> subscriptions = new ArrayList<>();
-            for (final SubscriptionByApplicationDTO subscriptionByApplicationDTO : storeClient.getSubscriptionsByApplication(applicationDTO.name).apis) {
-                final API api = apis.get(API.getId(subscriptionByApplicationDTO.apiName, subscriptionByApplicationDTO.apiVersion, subscriptionByApplicationDTO.apiProvider));
-                final Subscription subscription = Subscription.valueOf(applicationDTO.id, null, api, subscriptionByApplicationDTO.subscribedTier, subscriptionByApplicationDTO.status);
+
+            for (final SubscriptionsItemDTO subscriptionItemDTO : subscriptionDTO.subscriptions) {
+                final API api = apis.get(API.getId(subscriptionItemDTO.name, subscriptionItemDTO.version, subscriptionItemDTO.provider));
+                final Subscription subscription = Subscription.valueOf(applicationDTO.id, null, api, subscriptionItemDTO.tier, subscriptionItemDTO.status);
                 subscriptions.add(subscription);
             }
 

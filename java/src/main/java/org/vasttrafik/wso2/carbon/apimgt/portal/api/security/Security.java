@@ -58,7 +58,7 @@ public class Security implements ResourceBundleAware {
 
     public static ProxyClient getClient(final String username) {
         //return SESSIONS.get(username).proxyClient;
-        return SESSIONS.get(username);
+        return SESSIONS.get(username.toLowerCase());
     }
     /*
     @POST

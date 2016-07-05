@@ -156,6 +156,13 @@ final class StoreClient implements ResourceBundleAware {
                 .queryParam(Constants.ACTION, "getAllSubscriptions")
                 .request().cookie(cookie).get(SubscriptionsDTO.class));
     }
+    
+    SubscriptionsDTO getAllSubscriptionsWithSelectedApp(final String applicationName) {
+        return validateDTO(TARGET.path("subscription/subscription-list/ajax/subscription-list.jag")
+                .queryParam(Constants.ACTION, "getAllSubscriptions")
+                .queryParam("selectedApp", applicationName)
+                .request().cookie(cookie).get(SubscriptionsDTO.class));
+    }
 
     /**
      * This is required because there is a Store API bug that makes getAllSubscriptions only returns subscriptions
