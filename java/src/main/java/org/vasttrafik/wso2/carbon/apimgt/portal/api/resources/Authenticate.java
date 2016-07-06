@@ -16,7 +16,6 @@ import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 import org.vasttrafik.wso2.carbon.identity.api.utils.UserAdminUtils;
 import org.vasttrafik.wso2.carbon.identity.oauth.authcontext.JWTToken;
 import org.vasttrafik.wso2.carbon.identity.oauth.authcontext.JWTTokenGenerator;
-import org.vasttrafik.wso2.carbon.common.api.beans.AccessToken;
 import org.vasttrafik.wso2.carbon.common.api.beans.AuthenticatedUser;
 import org.vasttrafik.wso2.carbon.common.api.beans.Credentials;
 

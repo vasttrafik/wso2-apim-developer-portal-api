@@ -21,8 +21,10 @@ public class Document {
     }
 
     public static class Type {
-        private String type;
-        private String otherType;
+        @SuppressWarnings("unused")
+		private String type;
+        @SuppressWarnings("unused")
+		private String otherType;
 
         private Type(final String type, final String otherType) {
             this.type = type;
@@ -32,10 +34,13 @@ public class Document {
 
     private String name;
     private Source source;
-    private Type type;
+    @SuppressWarnings("unused")
+	private Type type;
     private String summary;
-    private String url;
-    private String fileName;
+    @SuppressWarnings("unused")
+	private String url;
+    @SuppressWarnings("unused")
+	private String fileName;
 
     @JsonIgnore
     private String content;

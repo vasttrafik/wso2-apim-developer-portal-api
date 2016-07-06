@@ -9,11 +9,15 @@ import java.util.List;
  */
 public class PaginatedList<T> {
 
-    private final String count;
-    private final List<T> list;
+    @SuppressWarnings("unused")
+	private final String count;
+    @SuppressWarnings("unused")
+	private final List<T> list;
 
-    private String previous;
-    private String next;
+    @SuppressWarnings("unused")
+	private String previous;
+    @SuppressWarnings("unused")
+	private String next;
 
     public PaginatedList(final Class<?> resource, int offset, int limit, final String query, final List<T> unpaginatedList, final Object... objects) {
         offset = offset < 0 ? 0 : offset < unpaginatedList.size() ? offset : unpaginatedList.size();

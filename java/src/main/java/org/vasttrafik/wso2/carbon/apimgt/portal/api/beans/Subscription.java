@@ -10,8 +10,10 @@ public class Subscription {
 
     private Application application;
     private API api;
-    private String tier;
-    private String status;
+    @SuppressWarnings("unused")
+	private String tier;
+    @SuppressWarnings("unused")
+	private String status;
 
     @JsonIgnore
     private Integer applicationId;
