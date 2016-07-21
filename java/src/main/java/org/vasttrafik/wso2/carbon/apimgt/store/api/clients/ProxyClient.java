@@ -69,6 +69,10 @@ public final class ProxyClient implements ResourceBundleAware {
         if (application.hasAccessToken()) {
             final RefreshTokenDTO.Key key = storeClient.refreshToken(application.getAccessToken(), application.getConsumerKey(), application.getConsumerSecret(), validityTime).data.key;
             return application.setAccessToken(key.accessToken);
+        } else if (application.getConsumerKey() != null && application.getConsumerKey() != null) {
+        	// Access token has ended up in an erroneous state. Need to refresh it with an empty old access token.
+        	final RefreshTokenDTO.Key key = storeClient.refreshToken(null, application.getConsumerKey(), application.getConsumerSecret(), validityTime).data.key;
+            return application.setAccessToken(key.accessToken);
         } else {
             final GenerateApplicationKeyDTO.Key key = storeClient.generateApplicationKey(application.getName(), validityTime).data.key;
             application.setAccessToken(key.accessToken);
