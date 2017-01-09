@@ -202,7 +202,7 @@ public class Statistics extends PortalResource {
 	}
 
 	private List<Statistic> getApplicationStatistics(List<Type> types, String userName, String applicationName) {
-
+		
 		ArrayList<Statistic> statisticList = new ArrayList<Statistic>();
 
 		Connection con = null;
@@ -221,6 +221,11 @@ public class Statistics extends PortalResource {
 				stmt.setString(1, userName);
 				stmt.setString(2, applicationName);
 
+				// Handle new type of application name
+				if(type.equals(Type.uniqueUsers)) {
+					stmt.setString(3, userName.replace("@", "-AT-") + "_" + applicationName + "_PRODUCTION");
+				}
+				
 				rs = stmt.executeQuery();
 
 				if (type.equals(Type.uniqueUsers)) {

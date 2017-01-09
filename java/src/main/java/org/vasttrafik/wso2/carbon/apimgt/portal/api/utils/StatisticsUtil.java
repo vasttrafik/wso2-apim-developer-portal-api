@@ -92,7 +92,7 @@ public class StatisticsUtil implements ResourceBundleAware {
 		SQL_APPLICATION_STATEMENT_MAP.put(Type.totalRequestsFaults,
 				"SELECT CONVERT(VARCHAR(10), request_date, 20) as request_date, sum(request_count) as request_count, sum(fault_count) as fault_count FROM dbo.API_TRAFFIC_SUMMARY_STAT_APPLICATION WHERE request_date > DATEADD(DAY, -9, GETDATE()) AND user_id LIKE ? AND application_name LIKE ? GROUP BY CONVERT(VARCHAR(10), request_date, 20) ORDER BY request_date");
 		SQL_APPLICATION_STATEMENT_MAP.put(Type.uniqueUsers,
-				"SELECT stat_date, sum(unique_users) as unique_users FROM dbo.API_APP_USERS_VIEW WHERE stat_date > DATEADD(DAY, -8, GETDATE()) AND username LIKE ? AND app_name LIKE ? AND app_name != 'DefaultApplication' GROUP BY stat_date ORDER BY stat_date");
+				"SELECT stat_date, sum(unique_users) as unique_users FROM dbo.API_APP_USERS_VIEW WHERE stat_date > DATEADD(DAY, -8, GETDATE()) AND username LIKE ? AND (app_name LIKE ? OR app_name LIKE ?) AND app_name != 'DefaultApplication' GROUP BY stat_date ORDER BY stat_date");
 		SQL_APPLICATION_STATEMENT_MAP.put(Type.faultsPercentage,
 				"SELECT error_message, sum(fault_count) as fault_count, cast(100.0 * SUM(fault_count) / SUM(sum(fault_count)) over () as decimal(6,1)) as percentage FROM dbo.API_ERRORS_STAT_APPLICATION_VIEW WHERE request_datetime > DATEADD(DAY, -9, GETDATE()) AND user_id LIKE ? AND application_name LIKE ? GROUP BY error_message");
 		SQL_APPLICATION_STATEMENT_MAP.put(Type.requestResponseTimes,
