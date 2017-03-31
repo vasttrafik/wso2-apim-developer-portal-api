@@ -14,6 +14,8 @@ public class Subscription {
 	private String tier;
     @SuppressWarnings("unused")
 	private String status;
+    @SuppressWarnings("unused")
+	private String subStatus;
 
     @JsonIgnore
     private Integer applicationId;
@@ -22,13 +24,14 @@ public class Subscription {
         return applicationId + "-" + apiId;
     }
 
-    public static Subscription valueOf(final Integer applicationId, final Application application, final API api, final String tier, final String status) {
+    public static Subscription valueOf(final Integer applicationId, final Application application, final API api, final String tier, final String status, final String subStatus) {
         final Subscription subscription = new Subscription();
         subscription.applicationId = applicationId;
         subscription.application = application;
         subscription.api = api;
         subscription.tier = tier;
         subscription.status = status;
+        subscription.subStatus = subStatus;
         return subscription;
     }
 

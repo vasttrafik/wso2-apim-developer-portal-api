@@ -166,7 +166,7 @@ public final class ProxyClient implements ResourceBundleAware {
 
             for (final SubscriptionsItemDTO subscriptionItemDTO : subscriptionDTO.subscriptions) {
                 final API api = apis.get(API.getId(subscriptionItemDTO.name, subscriptionItemDTO.version, subscriptionItemDTO.provider));
-                final Subscription subscription = Subscription.valueOf(applicationDTO.id, null, api, subscriptionItemDTO.tier, subscriptionItemDTO.status);
+                final Subscription subscription = Subscription.valueOf(applicationDTO.id, null, api, subscriptionItemDTO.tier, subscriptionItemDTO.status, subscriptionItemDTO.subStatus);
                 subscriptions.add(subscription);
             }
 

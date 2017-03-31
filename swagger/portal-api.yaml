@@ -1151,6 +1151,8 @@ definitions:
         $ref: '#/definitions/API'
       tier:
         type: string
+      subStatus:
+        type: string
       status:
         type: string
   Statistic:
