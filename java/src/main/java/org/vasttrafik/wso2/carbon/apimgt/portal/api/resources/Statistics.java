@@ -222,7 +222,7 @@ public class Statistics extends PortalResource {
 				stmt.setString(2, applicationName);
 
 				// Handle new type of application name
-				if(type.equals(Type.uniqueUsers)) {
+				if (type.equals(Type.uniqueUsers)) {
 					stmt.setString(3, userName.replace("@", "-AT-") + "_" + applicationName + "_PRODUCTION");
 				}
 				
