@@ -1092,6 +1092,24 @@
                         }
                     }
                 }
+            },
+            "delete": {
+                "description": "Deletes (anonymizes) gathered statistics",
+                "responses": {
+                    "200": {
+                        "description": "OK statistics anonymised.",
+                        "schema": {
+                            "title": "StatisticsList",
+                            "type": "boolean"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
             }
         },
         "/statistics/{applicationName}": {
@@ -1548,8 +1566,8 @@
             "title": "Authenticated user object",
             "required": [
                 "userId",
-				"userName",
-				"roles",
+        "userName",
+        "roles",
                 "accessToken"
             ],
             "properties": {
@@ -1559,12 +1577,12 @@
                 "userName": {
                     "type": "string"
                 },
-				"roles": {
-					"type": "array",
-					"items": {
-						"type": "string"
-					}
-				},
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
                 "accessToken": {
                     "$ref": "#/definitions/AccessToken"
                 }
@@ -1773,7 +1791,7 @@
                 "tier": {
                     "type": "string"
                 },
-				"subStatus": {
+        "subStatus": {
                     "type": "string"
                 },
                 "status": {

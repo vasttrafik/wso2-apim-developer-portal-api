@@ -1,6 +1,8 @@
 package org.vasttrafik.wso2.carbon.apimgt.portal.api.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.BadRequestException;
@@ -11,6 +13,7 @@ public class StatisticsUtil implements ResourceBundleAware {
 
 	public static final Map<String, String> SQL_API_STATEMENT_MAP;
 	public static final Map<Type, String> SQL_APPLICATION_STATEMENT_MAP;
+	public static final List<String> SQL_DELETE_STATEMENT_LIST;
 
 	public static final String STATISTIC_SERIES_NAME_NUMBER_OF_REQUESTS = "Antal requests";
 	public static final String STATISTIC_SERIES_NAME_NUMBER_OF_FAULTS = "Antal fel";
@@ -98,6 +101,12 @@ public class StatisticsUtil implements ResourceBundleAware {
 		SQL_APPLICATION_STATEMENT_MAP.put(Type.requestResponseTimes,
 				"SELECT resource_path, method, api, api_version, sum(request_count) as request_count, SUM(CAST(request_count * avg_response_time AS BIGINT)) / SUM(request_count) as avg_response_time FROM dbo.API_TRAFFIC_SUMMARY_STAT_APPLICATION WHERE request_date > DATEADD(DAY, -9, GETDATE()) AND resource_path IS NOT NULL AND user_id LIKE ? AND application_name LIKE ? GROUP BY resource_path, method, api, api_version ORDER BY api, api_version");
 
+	
+		/* List of statements to anonymize statistics usage for a user */
+		SQL_DELETE_STATEMENT_LIST = new ArrayList<String>();
+		SQL_DELETE_STATEMENT_LIST.add("UPDATE dbo.API_FAULT_SUMMARY SET user_id = ? WHERE user_id = ?");
+		SQL_DELETE_STATEMENT_LIST.add("UPDATE dbo.API_TRAFFIC_SUMMARY SET user_id = ? WHERE user_id = ?");
+		SQL_DELETE_STATEMENT_LIST.add("UPDATE dbo.API_OAUTH2_ACCESS_TOKEN_HISTORY_CURRENT SET authz_user = ? WHERE authz_user = ?");
 	}
 
 }

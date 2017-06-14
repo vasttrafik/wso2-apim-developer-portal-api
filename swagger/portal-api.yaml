@@ -4,6 +4,9 @@ info:
   title: Västtrafik REST API for WSO2 API Manager
   description: >
     This document describe a ** RESTFul API ** for WSO2 **API Manager**.
+
+
+
     You can find the source of this API definition at
     [here](https://github.com/vasttrafik/wso2-apim-developer-portal-api). It was
     written with [swagger 2](http://swagger.io/).
@@ -31,13 +34,28 @@ paths:
           in: query
           description: >
             ** Search condition **.
+
+
+
             If no advanced attribute modifier is found search will match the
             given query string against API Name.
+
+
+
             You can search in attributes by using **"attribute:"**modifier.
+
+
+
             Eg. "provider:WSO2" will match if the API provider is wso2. Matching
             is case-insensitive.
-            Supported attribute modifiers are [ **name, version, context, status,
-            description, document, provider** ]
+
+
+
+            Supported attribute modifiers are [ **name, version, context,
+            status, description, document, provider** ]
+
+
+
             Document is matched against all properties of all documents for all
             APIs.
           type: string
@@ -67,12 +85,19 @@ paths:
               description: The content type of the body.
               type: string
             ETag:
-              description: 'Entity Tag of the response resource. Used by caches, or in conditional requests.'
+              description: >-
+                Entity Tag of the response resource. Used by caches, or in
+                conditional requests.
               type: string
         '304':
-          description: Not Modified. Empty body because the client has already the latest version of the requested resource.
+          description: >-
+            Not Modified. Empty body because the client has already the latest
+            version of the requested resource.
         '401':
-          description: 'Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.'
+          description: >-
+            Unauthorized. Either the request did not contain a valid
+            Authorization header, or the access token expired and needs to be
+            refreshed.
           schema:
             $ref: '#/definitions/Error'
         '406':
@@ -96,17 +121,26 @@ paths:
               description: The content type of the body.
               type: string
             ETag:
-              description: 'Entity Tag of the response resource. Used by caches, or in conditional requests.'
+              description: >-
+                Entity Tag of the response resource. Used by caches, or in
+                conditional requests.
               type: string
             Last-Modified:
-              description: 'Date and time the resource has been modifed the last time. Used by caches, or in conditional reuquests.'
+              description: >-
+                Date and time the resource has been modifed the last time. Used
+                by caches, or in conditional reuquests.
               type: string
           schema:
             $ref: '#/definitions/API'
         '304':
-          description: Not Modified. Empty body because the client has already the latest version of the requested resource.
+          description: >-
+            Not Modified. Empty body because the client has already the latest
+            version of the requested resource.
         '401':
-          description: 'Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.'
+          description: >-
+            Unauthorized. Either the request did not contain a valid
+            Authorization header, or the access token expired and needs to be
+            refreshed.
           schema:
             $ref: '#/definitions/Error'
         '404':
@@ -125,7 +159,22 @@ paths:
         - $ref: '#/parameters/offset'
         - name: query
           in: query
-          description: "** Search condition **.\n\nIf no advanced attribute modifier is found search will match the given query string against document Name.\n\nYou can search in attributes by using **\"attribute:\"**modifier.\n\nEg. \"type:FILE\" will match if the document type is file. Matching is case-insensitive. \n\nSupported attribute modifiers are [ **name, type, summary** ]\n"
+          description: >
+            ** Search condition **.
+
+
+            If no advanced attribute modifier is found search will match the
+            given query string against document Name.
+
+
+            You can search in attributes by using **"attribute:"**modifier.
+
+
+            Eg. "type:FILE" will match if the document type is file. Matching is
+            case-insensitive. 
+
+
+            Supported attribute modifiers are [ **name, type, summary** ]
           type: string
         - $ref: '#/parameters/Accept'
         - $ref: '#/parameters/If-None-Match'
@@ -153,12 +202,19 @@ paths:
               description: The content type of the body.
               type: string
             ETag:
-              description: 'Entity Tag of the response resource. Used by caches, or in conditional requests.'
+              description: >-
+                Entity Tag of the response resource. Used by caches, or in
+                conditional requests.
               type: string
         '304':
-          description: Not Modified. Empty body because the client has already the latest version of the requested resource.
+          description: >-
+            Not Modified. Empty body because the client has already the latest
+            version of the requested resource.
         '401':
-          description: 'Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.'
+          description: >-
+            Unauthorized. Either the request did not contain a valid
+            Authorization header, or the access token expired and needs to be
+            refreshed.
           schema:
             $ref: '#/definitions/Error'
         '404':
@@ -188,15 +244,24 @@ paths:
               description: The content type of the body.
               type: string
             ETag:
-              description: 'Entity Tag of the response resource. Used by caches, or in conditional requests.'
+              description: >-
+                Entity Tag of the response resource. Used by caches, or in
+                conditional requests.
               type: string
             Last-Modified:
-              description: 'Date and time the resource has been modifed the last time. Used by caches, or in conditional reuquests.'
+              description: >-
+                Date and time the resource has been modifed the last time. Used
+                by caches, or in conditional reuquests.
               type: string
         '304':
-          description: Not Modified. Empty body because the client has already the latest version of the requested resource.
+          description: >-
+            Not Modified. Empty body because the client has already the latest
+            version of the requested resource.
         '401':
-          description: 'Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.'
+          description: >-
+            Unauthorized. Either the request did not contain a valid
+            Authorization header, or the access token expired and needs to be
+            refreshed.
           schema:
             $ref: '#/definitions/Error'
         '404':
@@ -225,15 +290,24 @@ paths:
               description: The content type of the body.
               type: string
             ETag:
-              description: 'Entity Tag of the response resource. Used by caches, or in conditional requests.'
+              description: >-
+                Entity Tag of the response resource. Used by caches, or in
+                conditional requests.
               type: string
             Last-Modified:
-              description: 'Date and time the resource has been modifed the last time. Used by caches, or in conditional reuquests.'
+              description: >-
+                Date and time the resource has been modifed the last time. Used
+                by caches, or in conditional reuquests.
               type: string
         '304':
-          description: Not Modified. Empty body because the client has already the latest version of the requested resource.
+          description: >-
+            Not Modified. Empty body because the client has already the latest
+            version of the requested resource.
         '401':
-          description: 'Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.'
+          description: >-
+            Unauthorized. Either the request did not contain a valid
+            Authorization header, or the access token expired and needs to be
+            refreshed.
           schema:
             $ref: '#/definitions/Error'
         '404':
@@ -262,15 +336,24 @@ paths:
               description: The content type of the body.
               type: string
             ETag:
-              description: 'Entity Tag of the response resource. Used by caches, or in conditional requests.'
+              description: >-
+                Entity Tag of the response resource. Used by caches, or in
+                conditional requests.
               type: string
             Last-Modified:
-              description: 'Date and time the resource has been modifed the last time. Used by caches, or in conditional reuquests.'
+              description: >-
+                Date and time the resource has been modifed the last time. Used
+                by caches, or in conditional reuquests.
               type: string
         '304':
-          description: Not Modified. Empty body because the client has already the latest version of the requested resource.
+          description: >-
+            Not Modified. Empty body because the client has already the latest
+            version of the requested resource.
         '401':
-          description: 'Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.'
+          description: >-
+            Unauthorized. Either the request did not contain a valid
+            Authorization header, or the access token expired and needs to be
+            refreshed.
           schema:
             $ref: '#/definitions/Error'
         '404':
@@ -362,13 +445,31 @@ paths:
             $ref: '#/definitions/Error'
   /applications:
     get:
-      description: 'Get a list of Applications created. For subscribers, the list will be restricted by ownership.'
+      description: >-
+        Get a list of Applications created. For subscribers, the list will be
+        restricted by ownership.
       parameters:
         - $ref: '#/parameters/limit'
         - $ref: '#/parameters/offset'
         - name: query
           in: query
-          description: "** Search condition **.\n\nIf no advanced attribute modifier is found search will match the given query string against application Name.\n\nYou can search in attributes by using **\"attribute:\"**modifier.\n\nEg. \"status:ACTIVE\" will match if the application status is active. Matching is case-insensitive. \n\nSupported attribute modifiers are [ **name, tier, status, description** ]\n"
+          description: >
+            ** Search condition **.
+
+
+            If no advanced attribute modifier is found search will match the
+            given query string against application Name.
+
+
+            You can search in attributes by using **"attribute:"**modifier.
+
+
+            Eg. "status:ACTIVE" will match if the application status is active.
+            Matching is case-insensitive. 
+
+
+            Supported attribute modifiers are [ **name, tier, status,
+            description** ]
           type: string
         - $ref: '#/parameters/Accept'
         - $ref: '#/parameters/If-None-Match'
@@ -396,16 +497,23 @@ paths:
               description: The content type of the body.
               type: string
             ETag:
-              description: 'Entity Tag of the response resource. Used by caches, or in conditional requests.'
+              description: >-
+                Entity Tag of the response resource. Used by caches, or in
+                conditional requests.
               type: string
         '304':
-          description: Not Modified. Empty body because the client has already the latest version of the requested resource.
+          description: >-
+            Not Modified. Empty body because the client has already the latest
+            version of the requested resource.
         '400':
           description: Bad Request. Invalid request or validation error
           schema:
             $ref: '#/definitions/Error'
         '401':
-          description: 'Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.'
+          description: >-
+            Unauthorized. Either the request did not contain a valid
+            Authorization header, or the access token expired and needs to be
+            refreshed.
           schema:
             $ref: '#/definitions/Error'
         '406':
@@ -424,7 +532,9 @@ paths:
         - $ref: '#/parameters/Content-Type'
       responses:
         '201':
-          description: Created. Successful response with the newly created object as entity in the body.
+          description: >-
+            Created. Successful response with the newly created object as entity
+            in the body.
           schema:
             $ref: '#/definitions/Application'
           headers:
@@ -432,14 +542,19 @@ paths:
               description: The content type of the body.
               type: string
             ETag:
-              description: 'Entity Tag of the response resource. Used by caches, or in conditional request'
+              description: >-
+                Entity Tag of the response resource. Used by caches, or in
+                conditional request
               type: string
         '400':
           description: Bad Request. Invalid request or validation error
           schema:
             $ref: '#/definitions/Error'
         '401':
-          description: 'Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.'
+          description: >-
+            Unauthorized. Either the request did not contain a valid
+            Authorization header, or the access token expired and needs to be
+            refreshed.
           schema:
             $ref: '#/definitions/Error'
         '415':
@@ -463,15 +578,24 @@ paths:
               description: The content type of the body.
               type: string
             ETag:
-              description: 'Entity Tag of the response resource. Used by caches, or in conditional requests.'
+              description: >-
+                Entity Tag of the response resource. Used by caches, or in
+                conditional requests.
               type: string
             Last-Modified:
-              description: 'Date and time the resource has been modifed the last time. Used by caches, or in conditional reuquests.'
+              description: >-
+                Date and time the resource has been modifed the last time. Used
+                by caches, or in conditional reuquests.
               type: string
         '304':
-          description: Not Modified. Empty body because the client has already the latest version of the requested resource.
+          description: >-
+            Not Modified. Empty body because the client has already the latest
+            version of the requested resource.
         '401':
-          description: 'Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.'
+          description: >-
+            Unauthorized. Either the request did not contain a valid
+            Authorization header, or the access token expired and needs to be
+            refreshed.
           schema:
             $ref: '#/definitions/Error'
         '404':
@@ -504,17 +628,24 @@ paths:
               description: The content type of the body.
               type: string
             ETag:
-              description: 'Entity Tag of the response resource. Used by caches, or in conditional request'
+              description: >-
+                Entity Tag of the response resource. Used by caches, or in
+                conditional request
               type: string
             Last-Modified:
-              description: 'Date and time the resource has been modifed the last time. Used by caches, or in conditional requests.'
+              description: >-
+                Date and time the resource has been modifed the last time. Used
+                by caches, or in conditional requests.
               type: string
         '400':
           description: Bad Request. Invalid request or validation error
           schema:
             $ref: '#/definitions/Error'
         '401':
-          description: 'Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.'
+          description: >-
+            Unauthorized. Either the request did not contain a valid
+            Authorization header, or the access token expired and needs to be
+            refreshed.
           schema:
             $ref: '#/definitions/Error'
         '404':
@@ -522,7 +653,9 @@ paths:
           schema:
             $ref: '#/definitions/Error'
         '412':
-          description: Precondition Failed. The request has not been performed because one of the preconditions is not met.
+          description: >-
+            Precondition Failed. The request has not been performed because one
+            of the preconditions is not met.
           schema:
             $ref: '#/definitions/Error'
     delete:
@@ -534,7 +667,10 @@ paths:
         '200':
           description: OK. Resource successfully deleted.
         '401':
-          description: 'Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.'
+          description: >-
+            Unauthorized. Either the request did not contain a valid
+            Authorization header, or the access token expired and needs to be
+            refreshed.
           schema:
             $ref: '#/definitions/Error'
         '404':
@@ -542,7 +678,9 @@ paths:
           schema:
             $ref: '#/definitions/Error'
         '412':
-          description: Precondition Failed. The request has not been performed because one of the preconditions is not met.
+          description: >-
+            Precondition Failed. The request has not been performed because one
+            of the preconditions is not met.
           schema:
             $ref: '#/definitions/Error'
     parameters:
@@ -560,7 +698,9 @@ paths:
         - $ref: '#/parameters/Content-Type'
       responses:
         '201':
-          description: Created. Successful response with the newly created token object as entity in the body.
+          description: >-
+            Created. Successful response with the newly created token object as
+            entity in the body.
           schema:
             $ref: '#/definitions/Application'
           headers:
@@ -568,14 +708,19 @@ paths:
               description: The content type of the body.
               type: string
             ETag:
-              description: 'Entity Tag of the response resource. Used by caches, or in conditional request'
+              description: >-
+                Entity Tag of the response resource. Used by caches, or in
+                conditional request
               type: string
         '400':
           description: Bad Request. Invalid request or validation error
           schema:
             $ref: '#/definitions/Error'
         '401':
-          description: 'Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.'
+          description: >-
+            Unauthorized. Either the request did not contain a valid
+            Authorization header, or the access token expired and needs to be
+            refreshed.
           schema:
             $ref: '#/definitions/Error'
         '415':
@@ -602,7 +747,10 @@ paths:
           schema:
             $ref: '#/definitions/Error'
         '401':
-          description: 'Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.'
+          description: >-
+            Unauthorized. Either the request did not contain a valid
+            Authorization header, or the access token expired and needs to be
+            refreshed.
           schema:
             $ref: '#/definitions/Error'
         '415':
@@ -622,7 +770,9 @@ paths:
         - $ref: '#/parameters/Content-Type'
       responses:
         '201':
-          description: Authorized. Successful response with the newly authenticated user as entity in the body.
+          description: >-
+            Authorized. Successful response with the newly authenticated user as
+            entity in the body.
           schema:
             $ref: '#/definitions/AuthenticatedUser'
           headers:
@@ -630,7 +780,9 @@ paths:
               description: The content type of the body.
               type: string
             ETag:
-              description: 'Entity Tag of the response resource. Used by caches, or in conditional request'
+              description: >-
+                Entity Tag of the response resource. Used by caches, or in
+                conditional request
               type: string
         '400':
           description: Bad Request. Invalid request or validation error
@@ -682,7 +834,25 @@ paths:
             items:
               $ref: '#/definitions/Statistic'
         '401':
-          description: 'Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.'
+          description: >-
+            Unauthorized. Either the request did not contain a valid
+            Authorization header, or the access token expired and needs to be
+            refreshed.
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      description: Deletes (anonymizes) gathered statistics
+      responses:
+        '200':
+          description: OK statistics anonymised.
+          schema:
+            title: StatisticsList
+            type: boolean
+        '401':
+          description: >-
+            Unauthorized. Either the request did not contain a valid
+            Authorization header, or the access token expired and needs to be
+            refreshed.
           schema:
             $ref: '#/definitions/Error'
   '/statistics/{applicationName}':
@@ -716,7 +886,10 @@ paths:
             items:
               $ref: '#/definitions/Statistic'
         '401':
-          description: 'Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.'
+          description: >-
+            Unauthorized. Either the request did not contain a valid
+            Authorization header, or the access token expired and needs to be
+            refreshed.
           schema:
             $ref: '#/definitions/Error'
   '/statistics/{apiName}/{apiVersion}':
@@ -770,12 +943,17 @@ paths:
             items:
               $ref: '#/definitions/Statistic'
         '401':
-          description: 'Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.'
+          description: >-
+            Unauthorized. Either the request did not contain a valid
+            Authorization header, or the access token expired and needs to be
+            refreshed.
           schema:
             $ref: '#/definitions/Error'
   /subscriptions:
     get:
-      description: Get subscription list. The list returned will be restricted to those of the logged in user.
+      description: >-
+        Get subscription list. The list returned will be restricted to those of
+        the logged in user.
       parameters:
         - $ref: '#/parameters/limit'
         - $ref: '#/parameters/offset'
@@ -805,12 +983,19 @@ paths:
               description: The content type of the body.
               type: string
             ETag:
-              description: 'Entity Tag of the response resource. Used by caches, or in conditional requests.'
+              description: >-
+                Entity Tag of the response resource. Used by caches, or in
+                conditional requests.
               type: string
         '304':
-          description: Not Modified. Empty body because the client has already the latest version of the requested resource.
+          description: >-
+            Not Modified. Empty body because the client has already the latest
+            version of the requested resource.
         '401':
-          description: 'Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.'
+          description: >-
+            Unauthorized. Either the request did not contain a valid
+            Authorization header, or the access token expired and needs to be
+            refreshed.
           schema:
             $ref: '#/definitions/Error'
         '406':
@@ -829,7 +1014,9 @@ paths:
         - $ref: '#/parameters/Content-Type'
       responses:
         '201':
-          description: Created. Successful response with the newly created object as entity in the body.
+          description: >-
+            Created. Successful response with the newly created object as entity
+            in the body.
           schema:
             $ref: '#/definitions/Subscription'
           headers:
@@ -837,14 +1024,19 @@ paths:
               description: The content type of the body.
               type: string
             ETag:
-              description: 'Entity Tag of the response resource. Used by caches, or in conditional request'
+              description: >-
+                Entity Tag of the response resource. Used by caches, or in
+                conditional request
               type: string
         '400':
           description: Bad Request. Invalid request or validation error
           schema:
             $ref: '#/definitions/Error'
         '401':
-          description: 'Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.'
+          description: >-
+            Unauthorized. Either the request did not contain a valid
+            Authorization header, or the access token expired and needs to be
+            refreshed.
           schema:
             $ref: '#/definitions/Error'
   '/subscriptions/{subscriptionId}':
@@ -864,15 +1056,24 @@ paths:
               description: The content type of the body.
               type: string
             ETag:
-              description: 'Entity Tag of the response resource. Used by caches, or in conditional requests.'
+              description: >-
+                Entity Tag of the response resource. Used by caches, or in
+                conditional requests.
               type: string
             Last-Modified:
-              description: 'Date and time the resource has been modifed the last time. Used by caches, or in conditional reuquests.'
+              description: >-
+                Date and time the resource has been modifed the last time. Used
+                by caches, or in conditional reuquests.
               type: string
         '304':
-          description: Not Modified. Empty body because the client has already the latest version of the requested resource.
+          description: >-
+            Not Modified. Empty body because the client has already the latest
+            version of the requested resource.
         '401':
-          description: 'Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.'
+          description: >-
+            Unauthorized. Either the request did not contain a valid
+            Authorization header, or the access token expired and needs to be
+            refreshed.
           schema:
             $ref: '#/definitions/Error'
         '404':
@@ -892,7 +1093,10 @@ paths:
         '200':
           description: OK. Resource successfully deleted.
         '401':
-          description: 'Unauthorized. Either the request did not contain a valid Authorization header, or the access token expired and needs to be refreshed.'
+          description: >-
+            Unauthorized. Either the request did not contain a valid
+            Authorization header, or the access token expired and needs to be
+            refreshed.
           schema:
             $ref: '#/definitions/Error'
         '404':
@@ -900,7 +1104,9 @@ paths:
           schema:
             $ref: '#/definitions/Error'
         '412':
-          description: Precondition Failed. The request has not been performed because one of the preconditions is not met.
+          description: >-
+            Precondition Failed. The request has not been performed because one
+            of the preconditions is not met.
           schema:
             $ref: '#/definitions/Error'
     parameters:
@@ -909,7 +1115,9 @@ parameters:
   apiId:
     name: apiId
     in: path
-    description: "**API ID** consisting name version and provider of the API. \nShould be formated as **name--version_provider**\n"
+    description: |
+      **API ID** consisting name version and provider of the API. 
+      Should be formated as **name--version_provider**
     required: true
     type: string
   applicationId:
@@ -955,7 +1163,9 @@ parameters:
   Content-Type:
     name: Content-Type
     in: header
-    description: 'Media type of the entity in the request body. Should denote XML or JSON, default is JSON.'
+    description: >-
+      Media type of the entity in the request body. Should denote XML or JSON,
+      default is JSON.
     type: string
   If-None-Match:
     name: If-None-Match
@@ -1119,7 +1329,9 @@ definitions:
         description: 'The sender of the message, which can be email or username'
         type: string
       to:
-        description: The receipients of the message. Semicolon separated list of emails or usernames
+        description: >-
+          The receipients of the message. Semicolon separated list of emails or
+          usernames
         type: string
       subject:
         description: The message subject
@@ -1199,7 +1411,9 @@ definitions:
         description: Preferably an url with more details about the error.
       items:
         type: array
-        description: If there are more than one error list them out. Ex. list out validation errors by each field.
+        description: >-
+          If there are more than one error list them out. Ex. list out
+          validation errors by each field.
         items:
           $ref: '#/definitions/ErrorListItem'
   ErrorListItem:

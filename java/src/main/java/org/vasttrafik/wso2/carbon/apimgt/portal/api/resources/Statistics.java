@@ -6,6 +6,7 @@ import org.vasttrafik.wso2.carbon.apimgt.portal.api.annotations.Authorization;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.annotations.Status;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.Series;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.beans.Statistic;
+import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
 //import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.ResourceBundleAware;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.StatisticsUtil;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.StatisticsUtil.Grouping;
@@ -14,8 +15,13 @@ import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.StatisticsUtil.Source;
 import org.vasttrafik.wso2.carbon.apimgt.portal.api.utils.StatisticsUtil.Type;
 import org.vasttrafik.wso2.carbon.common.api.utils.ResponseUtils;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.naming.InitialContext;
@@ -28,7 +34,7 @@ import javax.ws.rs.core.SecurityContext;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("statistics")
-public class Statistics extends PortalResource {
+public class Statistics extends PortalResource implements ResourceBundleAware {
 
 	private static Log logger = LogFactory.getLog(Statistics.class);
 
@@ -96,6 +102,75 @@ public class Statistics extends PortalResource {
 			@QueryParam("type") final List<Type> type)
 	{
 		return getApiStatistics(type, period, grouping, apiName, apiVersion);
+	}
+	
+	@Authorization
+	@Status(Status.OK)
+	@DELETE
+	public boolean deleteStatistics() 
+	{
+		final String userName = securityContext.getUserPrincipal().getName();
+		return deleteStatistics(userName);
+	}
+	
+	private boolean deleteStatistics(String userName) {
+
+		if (userName.isEmpty() || userName == null || userName.equals("admin"))
+			throw new BadRequestException(ResponseUtils.badRequest(resourceBundle, 18003L, new Object[][] {}));
+
+		// Allocate and use a connection from the pool
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+
+			con = ds.getConnection();
+			con.setAutoCommit(false);
+
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
+			
+			String userDate = "deleteduser-" + formatter.format(new Date());
+
+			for (String statement : StatisticsUtil.SQL_DELETE_STATEMENT_LIST) {
+
+				stmt = con.prepareStatement(statement);
+				stmt.setString(1, userDate);
+				stmt.setString(2, userName);
+			}
+
+			con.commit();
+
+		} catch (Exception exception) {
+
+			try {
+				con.rollback();
+			} catch (SQLException e) {
+				logger.error("Problem rolling back transaction ", exception);
+			}
+
+			logger.error("Error: ", exception);
+			exception.printStackTrace();
+			throw new InternalServerErrorException(ResponseUtils.serverError(exception));
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (Exception e) {
+				}
+			if (stmt != null)
+				try {
+					stmt.close();
+				} catch (Exception e) {
+				}
+			if (con != null)
+				try {
+					con.close();
+				} catch (Exception e) {
+				}
+		}
+		
+		return true;
 	}
 
 	private List<Statistic> getApiStatistics(List<Type> types, Period period, Grouping grouping, String apiName,
