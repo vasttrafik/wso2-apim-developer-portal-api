@@ -772,7 +772,7 @@ paths:
         '201':
           description: >-
             Authorized. Successful response with the newly authenticated user as
-            entity in the body.
+            entity in the body. If user has enabled TOTP, the reponse will indicate this. A new request then has to be made filling in username, password and TOTP-code.
           schema:
             $ref: '#/definitions/AuthenticatedUser'
           headers:
@@ -1214,6 +1214,8 @@ definitions:
         type: string
       userName:
         type: string
+      enabledTotp:
+        type: boolean
       roles:
         type: array
         items:
@@ -1279,6 +1281,8 @@ definitions:
       userName:
         type: string
       credential:
+        type: string
+      totp:
         type: string
   Document:
     title: Document
